@@ -10,19 +10,20 @@ import java.util.ArrayList;
 public class Cliente
 {
 	//Identificador del cliente
-	private int id;
+	private int identificacion;
 	
 	//String que modela el nombre del cliente
 	private String nombre;
 	
 	//Direccion del cliente
-	private String direccion;
+	private String nacionalidad;
 	
 	//Telefono del cliente
-	private String telefono;
+	private String correo;
 	
-	//Cargas que tiene el cliente. Pueden ser varias asi que van en lista
-	private ArrayList<Carga> cargas;
+	private String tipoIdentificacion;
+	
+	private ArrayList<VueloPasajeros> vuelos;
 	
 	/**
 	 * Clase constructora del cliente
@@ -31,108 +32,61 @@ public class Cliente
 	 * @param direccion
 	 * @param telefono
 	 */
-	public Cliente(int id, String nombre, String direccion, String telefono)
+	public Cliente(int id, String nombre, String nacionalidad, String correo, String tipoIdentificacion)
 	{
-		this.id = id;
+		this.identificacion = id;
 		this.nombre = nombre;
-		this.direccion = direccion;
-		this.telefono = telefono;
-		cargas = new ArrayList<Carga>();
+		this.nacionalidad = nacionalidad;
+		this.correo = correo;
+		this.tipoIdentificacion=tipoIdentificacion;
+		vuelos = new ArrayList<VueloPasajeros>();
 	}
-	
-	/**
-	 * Metodo que se encarga de adicionar cargas al cliente y retorna el id asociado a este cliente
-	 * @param carga
-	 * @return id del cliente
-	 */
-	public int agregarCarga(Carga carga)
+	public void agregarVuelo(VueloPasajeros v)
 	{
-		cargas.add(carga);
-		return id;
+		vuelos.add(v);
 	}
-	
-	
-	//SET and GET
-	
-	/**
-	 * Metodo que actualiza el id de un cliente y retorna el id asociado
-	 * @param id
-	 * @return id del cliente
-	 */
-	public int setId(int id)
-	{
-		this.id = id;
-		return this.id;
+	public ArrayList<VueloPasajeros> getVuelos() {
+		return vuelos;
 	}
-	
-	/**
-	 * Metodo que actualiza el nombre de un cliente y retorna su id asociado
-	 * @param nombre
-	 * @return id del cliente
-	 */
-	public int setNombre(String nombre)
-	{
+
+	public int getIdentificacion() {
+		return identificacion;
+	}
+
+	public void setIdentificacion(int identificacion) {
+		this.identificacion = identificacion;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
 		this.nombre = nombre;
-		return this.id;
+	}
+
+	public String getNacionalidad() {
+		return nacionalidad;
+	}
+
+	public void setNacionalidad(String nacionalidad) {
+		this.nacionalidad = nacionalidad;
+	}
+
+	public String getCorreo() {
+		return correo;
+	}
+
+	public void setCorreo(String correo) {
+		this.correo = correo;
+	}
+
+	public String getTipoIdentificacion() {
+		return tipoIdentificacion;
+	}
+
+	public void setTipoIdentificacion(String tipoIdentificacion) {
+		this.tipoIdentificacion = tipoIdentificacion;
 	}
 	
-	/**
-	 * Metodo que actualiza la direccion de un cliente y retorna su id asociado
-	 * @param direccion
-	 * @return id del cliente
-	 */
-	public int setDireccion(String direccion)
-	{
-		this.direccion = direccion;
-		return this.id;
-	}
-	
-	/**
-	 * Metodo que actualiza el telefono de un cliente y retorna el id asociado a este
-	 * @param telefono
-	 * @return id del cliente
-	 */
-	public int setTelefono(String telefono)
-	{
-		this.telefono = telefono;
-		return this.id;
-	}
-	
-	//GET
-	
-	/**
-	 * Retorna el id del clietne actual
-	 * @return
-	 */
-	public int getId()
-	{
-		return this.id;
-	}
-	
-	/**
-	 * Retorna el nombre dle cliente actual
-	 * @return
-	 */
-	public String getNombre()
-	{
-		return this.nombre;
-	}
-	
-	/**
-	 * Metodo que retorna la direccion del cliente
-	 * @return
-	 */
-	public String getDireccion()
-	{
-		return this.direccion;
-	}
-	
-	/**
-	 * Metodo que retorna el telefono del cliente
-	 * @return
-	 */
-	public String getTelefono()
-	{
-		return this.telefono;
-	}
 }

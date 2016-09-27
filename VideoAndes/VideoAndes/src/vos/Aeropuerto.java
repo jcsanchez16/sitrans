@@ -10,22 +10,19 @@ import java.util.ArrayList;
 public class Aeropuerto
 {
 	//Identificador asociado al aeropuerto
-	private int id;
+	private String IATA;
 	
 	//Nombre del aeropuerto
 	private String nombre;
 	
 	//Impuestos asociados al aeropuerto
-	private int impuestos;
+	private String ciudad;
 	
 	//Lista de vuelos de salida
 	private ArrayList<Vuelo> vuelosSalida;
 	
 	//Lista de vuelos de llegada
 	private ArrayList<Vuelo> vuelosLlegada;
-	
-	//Ciudad donde se encuentra ubicado
-	private Ciudad ciudad;
 	
 	
 	/**
@@ -34,158 +31,89 @@ public class Aeropuerto
 	 * @param nombre
 	 * @param impuestos
 	 */
-	public Aeropuerto(int id, String nombre, int impuestos, Ciudad ciudad)
+	public Aeropuerto(String ciudad, String nombre, String IATA)
 	{
-		this.id = id;
 		this.nombre = nombre;
-		this.impuestos = impuestos;
+		this.ciudad = ciudad;
+		this.IATA = IATA;
 		vuelosSalida = new ArrayList<Vuelo>();
 		vuelosLlegada = new ArrayList<Vuelo>();
-		this.ciudad = ciudad;
 	}
 	
-	//SET y GET
 	
-	/**
-	 * Updates the id of a Aeropuerto
-	 * @param id
-	 * @return
-	 */
-	public int setId(int id)
+	public void agregarVueloSalida(Vuelo v)
 	{
-		this.id = id;
-		return this.id;
+		vuelosSalida.add(v);
 	}
 	
-	/**
-	 * Updates the name of an Aeropuerto
-	 * @param nombre
-	 * @return
-	 */
-	public int setNombre(String nombre)
+	public void agregarVueloLLegada(Vuelo v)
 	{
+		vuelosLlegada.add(v);
+	}
+	
+	public String getIATA() {
+		return IATA;
+	}
+
+
+
+	public void setIATA(String iATA) {
+		IATA = iATA;
+	}
+
+
+
+	public String getNombre() {
+		return nombre;
+	}
+
+
+
+	public void setNombre(String nombre) {
 		this.nombre = nombre;
-		return this.id;
 	}
-	
-	/**
-	 * Sets the impuestos of this Aeropuerto
-	 * @param impuesto
-	 * @return
-	 */
-	public int setImpuestos(int impuesto)
-	{
-		this.impuestos = impuesto;
-		return this.id;
-	}
-	
-	/**
-	 * sets the vuelos of departure of this Aeropuerto
-	 * @param vuelosSalida
-	 * @return
-	 */
-	public int setVuelosSalida(ArrayList<Vuelo> vuelosSalida)
-	{
-		this.vuelosSalida = vuelosSalida;
-		return this.id;
-	}
-	
-	/**
-	 * Updates the info and adds a Vuelo to the vuelosSalida list
-	 * @param vuelosSalida
-	 * @return
-	 */
-	public int addVueloSalida(Vuelo vuelosSalida)
-	{
-		this.vuelosSalida.add(vuelosSalida);
-		return this.id;
-	}
-	
-	/**
-	 * Updates information related with the list of arriving Vuelos
-	 * @param vuelosLlegada
-	 * @return id associated with this Aeropuerto
-	 */
-	public int setVuelosLlegada(ArrayList<Vuelo> vuelosLlegada)
-	{
-		this.vuelosLlegada = vuelosLlegada;
-		return this.id;
-	}
-	
-	/**
-	 * Updates info about the arriving flights
-	 * @param vuelosLlegada
-	 * @return id associated with this Aeropuerto
-	 */
-	public int addVueloLlegada(Vuelo vuelosLlegada)
-	{
-		this.vuelosLlegada.add(vuelosLlegada);
-		return this.id;
-	}
-	
-	//GET
-	
-	/**
-	 * Returns the id of this Aeropuerto
-	 * @return
-	 */
-	public int getId()
-	{
-		return this.id;
-	}
-	
-	/**
-	 * Gets the name of this Aeropuerto
-	 * @return
-	 */
-	public String getNombre()
-	{
-		return this.nombre;
-	}
-	
-	/**
-	 * Returns the fee of this Aeropuerto
-	 * @return
-	 */
-	public int getImpuesto()
-	{
-		return this.impuestos;
-	}
-	
-	/**
-	 * Returns the vuelosSalida
-	 * @return
-	 */
-	public ArrayList<Vuelo> getVuelosSalida()
-	{
-		return this.vuelosSalida;
-	}
-	
-	/**
-	 * Gives the list of vuelosLlegada
-	 * @return
-	 */
-	public ArrayList<Vuelo> getVuelosLlegada()
-	{
-		return this.vuelosLlegada;
-	}
-	
-	/**
-	 * Returns the city where it is located.
-	 * @return
-	 */
-	public Ciudad getCiudad()
-	{
+
+
+
+	public String getCiudad() {
 		return ciudad;
 	}
+
+
+
+	public void setCiudad(String ciudad) {
+		this.ciudad = ciudad;
+	}
+
+
+
+	public ArrayList<Vuelo> getVuelosSalida() {
+		return vuelosSalida;
+	}
+
+
+
 	
+
+
+
+	public ArrayList<Vuelo> getVuelosLlegada() {
+		return vuelosLlegada;
+	}
+
+
+
+	
+
+
+
 	/**
 	 * Main created for testing purposes
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Aeropuerto aeropuerto = new Aeropuerto(6, "AeroPostale", 56, null);
-		System.out.println(aeropuerto.getId()+"------"+aeropuerto.getImpuesto());
+		Aeropuerto aeropuerto = new Aeropuerto("bogota", "el dorado", "BOG");
+		System.out.println(aeropuerto.getIATA()+"------"+aeropuerto.getCiudad());
 		System.out.println(aeropuerto.getNombre());
 	}
 }

@@ -1,5 +1,7 @@
 package vos;
 
+import java.util.ArrayList;
+
 import sun.applet.Main;
 
 /**
@@ -10,71 +12,130 @@ import sun.applet.Main;
 public class Aerolinea
 {
 	//Identificador de la aerolinea
-	private int id;
+	private String paizRadicacion;
 	
 	//Nombre de a aerolinea
 	private String nombre;
+	
+	private String OACI;
+	
+	private String codigo;
+	
+	private ArrayList<Vuelo> vuelos;
+	
+	private ArrayList<Avion> aviones;
 	
 	/**
 	 * Clase constructora de la aerolinea
 	 * @param id
 	 * @param nombre
 	 */
-	public Aerolinea(int id, String nombre)
+	public Aerolinea(String paizRadicacion, String nombre, String OACI, String codigo)
 	{
 		this.nombre = nombre;
-		this.id = id;
+		this.paizRadicacion = paizRadicacion;
+		this.OACI = OACI;		
+		this.codigo = codigo;
+		vuelos = new ArrayList<Vuelo>();
+		aviones = new ArrayList<Avion>();
 	}
 	
-	//GET y SET
 	
-	/**
-	 * Gives the id of this Aerolinea
-	 * @return
-	 */
-	public int getId()
+	public void agregarVuelo(Vuelo v)
 	{
-		return this.id;
+		vuelos.add(v);
 	}
 	
-	/**
-	 * Returns the name of this Aerolinea
-	 * @return
-	 */
-	public String getNombre()
+	public void agregarAvion(Avion a)
 	{
-		return this.nombre;
+		aviones.add(a);
 	}
-	/**
-	 * Changes the id of a Aerolinea
-	 * @param id
-	 * @return
-	 */
-	public int setId(int id)
-	{
-		this.id = id;
-		return this.id;
+
+
+	public ArrayList<Vuelo> getVuelos() {
+		return vuelos;
 	}
-	
-	/**
-	 * Updates the name of an Aerolinea
-	 * @param nombre
-	 * @return
-	 */
-	public int setNombre(String nombre)
-	{
+
+
+
+
+
+	public ArrayList<Avion> getAviones() {
+		return aviones;
+	}
+
+
+
+
+
+	public String getPaizRadicacion() {
+		return paizRadicacion;
+	}
+
+
+
+
+
+	public void setPaizRadicacion(String paizRadicacion) {
+		this.paizRadicacion = paizRadicacion;
+	}
+
+
+
+
+
+	public String getNombre() {
+		return nombre;
+	}
+
+
+
+
+
+	public void setNombre(String nombre) {
 		this.nombre = nombre;
-		return this.id;
 	}
-	
-	/**
-	 * Main method for test purposes
-	 * @param args
-	 */
+
+
+
+
+
+	public String getOACI() {
+		return OACI;
+	}
+
+
+
+
+
+	public void setOACI(String oACI) {
+		OACI = oACI;
+	}
+
+
+
+
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+
+
+
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+
+
+
+
 	public static void main(String[] args)
 	{
-		Aerolinea aero = new Aerolinea(7, "Panamerican");
-		System.out.println(aero.getId()+"----"+aero.getNombre());
+		Aerolinea aero = new Aerolinea("Colombia", "Panamerican", "BOG", "PA");
+		System.out.println(aero.getOACI()+"----"+aero.getNombre()+"----"+aero.getPaizRadicacion());
 	}
 	
 }

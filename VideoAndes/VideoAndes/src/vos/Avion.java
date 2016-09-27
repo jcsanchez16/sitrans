@@ -1,5 +1,7 @@
 package vos;
 
+import java.util.ArrayList;
+
 import sun.applet.Main;
 
 /**
@@ -10,13 +12,19 @@ import sun.applet.Main;
 public class Avion
 {
 	//Identificador del avion
-	private int id;
+	private int nSerie;
 	
 	//Booleano que indica si es o no un avion de carga
-	private boolean carga;
+	private int modelo;
 	
 	//Int que modela la capacidad sea de un avion de carga(capacidad de peso) o sea de un avion normal(capacidad de pasajeros)
-	private int capacidad;
+	private int anhoFabricacion;
+	
+	private String marca;
+	
+	private Aerolinea aerolinea;
+	
+	private ArrayList<Vuelo> vuelos;
 	
 	/**
 	 * Metodo constructor del avion
@@ -24,77 +32,85 @@ public class Avion
 	 * @param carga
 	 * @param capacidad
 	 */
-	public Avion(int id,boolean carga, int capacidad){
-		this.id = id;
-		this.carga = carga;
-		this.capacidad = capacidad;
+	public Avion(int nSerie, int modelo, int anhoFabricacion, String marca, Aerolinea aero){
+		this.anhoFabricacion = anhoFabricacion;
+		this.marca = marca;
+		this.nSerie = nSerie;
+		this.modelo = modelo;
+		this.aerolinea = aero;
+		vuelos= new ArrayList<Vuelo>();
 	}
 	
-	//SET y GET
-	
-	/**
-	 * Cambia o actualiza el id del avion actual
-	 * @param id
-	 * @return
-	 */
-	public int setID(int id){
-		this.id = id;
-		return this.id;
-	}
-	
-	/**
-	 * Actualiza el tipo de avion que es este de carga o no.
-	 * Retorna el id del avion
-	 * @param carga
-	 * @return
-	 */
-	public int setCarga(boolean carga){
-		this.carga = carga;
-		return this.id;
-	}
-	
-	/**
-	 * Actualiza la capacidad de un avion
-	 * @param capacidad
-	 * @return
-	 */
-	public int setCapacidad(int capacidad)
+	public void agregarVuelo(Vuelo v)
 	{
-		this.capacidad = capacidad;
-		return this.id;
+		vuelos.add(v);
 	}
 	
-	/**
-	 * Gives the id of this Avion
-	 * @return
-	 */
-	public int getId(){
-		return this.id;
+	public Aerolinea getAerolinea() {
+		return aerolinea;
 	}
-	
-	/**
-	 * Gives the boolean that tells if this avion is of carga or not
-	 * @return
-	 */
-	public boolean getCarga(){
-		return this.carga;
+
+
+
+	public void setAerolinea(Aerolinea aerolinea) {
+		this.aerolinea = aerolinea;
 	}
-	
-	/**
-	 * Gives the capacity of this Avion
-	 * @return
-	 */
-	public int getCapacidad(){
-		return this.capacidad;
+
+
+
+	public ArrayList<Vuelo> getVuelos() {
+		return vuelos;
 	}
-	
-	/**
-	 * Main method for testing purposes
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		Avion avion = new Avion(8, true, 80);
-		System.out.println(avion.getCapacidad()+"----"+avion.getId()+"----"+avion.getCarga());
+
+
+
+	public int getnSerie() {
+		return nSerie;
 	}
+
+
+
+	public void setnSerie(int nSerie) {
+		this.nSerie = nSerie;
+	}
+
+
+
+	public int getModelo() {
+		return modelo;
+	}
+
+
+
+	public void setModelo(int modelo) {
+		this.modelo = modelo;
+	}
+
+
+
+	public int getAnhoFabricacion() {
+		return anhoFabricacion;
+	}
+
+
+
+	public void setAnhoFabricacion(int anhoFabricacion) {
+		this.anhoFabricacion = anhoFabricacion;
+	}
+
+
+
+	public String getMarca() {
+		return marca;
+	}
+
+
+
+	public void setMarca(String marca) {
+		this.marca = marca;
+	}
+
+
+
+
 }
