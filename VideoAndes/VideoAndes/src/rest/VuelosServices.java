@@ -14,11 +14,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import fachada.VuelAndesFachada;
+import master.VuelAndesMaster;
 import vos.Vuelo;
 
 @Path("api")
-public class VideoAndesServices {
+public class VuelosServices {
 
 	// GET SERVICES:
 
@@ -33,11 +33,11 @@ public class VideoAndesServices {
 	@Path("/vuelos")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response GetVideosGET() {
-		VuelAndesFachada fachada = VuelAndesFachada.darInstancia(getPath());
+		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
 		System.out.println("holi mundo");
 		ArrayList<Vuelo> vuelos = null;
 		try {
-			vuelos = fachada.darVuelos();
+			vuelos = master.darVuelos();
 		} catch (Exception e) {
 			ArrayList<String> temp = new ArrayList<String>();
 			temp.add(e.getMessage());
@@ -50,32 +50,32 @@ public class VideoAndesServices {
 	@Path("/GetVideosGETError")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response GetVideosGETError() {
-		VuelAndesFachada fachada = VuelAndesFachada.darInstancia(getPath());
-		ArrayList<Vuelo> videos = null;
+		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
+		ArrayList<Vuelo> vuelos = null;
 		try {
-			videos = fachada.darVideosConError();
+			vuelos = master.darVideosConError();
 		} catch (Exception e) {
 			ArrayList<String> temp = new ArrayList<String>();
 			temp.add(e.getMessage());
 			return Response.status(500).entity(temp).build();
 		}
-		return Response.status(200).entity(videos).build();
+		return Response.status(200).entity(vuelos).build();
 	}
 
 	@GET
 	@Path("/GetVideosByNameGET")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response GetVideosByNameGET(@QueryParam("name") String name) {
-		VuelAndesFachada fachada = VuelAndesFachada.darInstancia(getPath());
-		ArrayList<Vuelo> videos = null;
+		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
+		ArrayList<Vuelo> vuelos = null;
 		try {
-			videos = fachada.buscarVideosPorName(name);
+			vuelos = master.buscarVideosPorName(name);
 		} catch (Exception e) {
 			ArrayList<String> temp = new ArrayList<String>();
 			temp.add(e.getMessage());
 			return Response.status(500).entity(temp).build();
 		}
-		return Response.status(200).entity(videos).build();
+		return Response.status(200).entity(vuelos).build();
 	}
 
 	// POST SERVICES:
@@ -84,33 +84,39 @@ public class VideoAndesServices {
 	@Path("/GetVideosPOST")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response GetVideosPOST() {
-		VuelAndesFachada fachada = VuelAndesFachada.darInstancia(getPath());
-		ArrayList<Vuelo> videos = null;
+		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
+		ArrayList<Vuelo> vuelos = null;
 		try {
-			videos = fachada.darVideos();
+			vuelos = master.darVuelos();
 		} catch (Exception e) {
 			ArrayList<String> temp = new ArrayList<String>();
 			temp.add(e.getMessage());
 			return Response.status(500).entity(temp).build();
 		}
 
-		return Response.status(200).entity(videos).build();
+		return Response.status(200).entity(vuelos).build();
 	}
 
 	@POST
 	@Path("/GetVideosByNameAndIdPOST")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response GetVideosByNameAndIdPOST(@FormParam("name") String name, @FormParam("id") String id) {
-		VuelAndesFachada fachada = VuelAndesFachada.darInstancia(getPath());
-		ArrayList<Vuelo> videos = null;
+		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
+		ArrayList<Vuelo> vuelos = null;
 		try {
-			videos = fachada.buscarVideosPorNameYId(name, Integer.parseInt(id));
+			vuelos = master.buscarVideosPorNameYId(name, Integer.parseInt(id));
 		} catch (Exception e) {
 			ArrayList<String> temp = new ArrayList<String>();
 			temp.add(e.getMessage());
 			return Response.status(500).entity(temp).build();
 		}
-		return Response.status(200).entity(videos).build();
+		return Response.status(200).entity(vuelos).build();
 	}
+	
+
+	
+	//----------------------Requerimientos-------------------------//
+	
+	
 
 }

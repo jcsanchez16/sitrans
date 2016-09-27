@@ -25,9 +25,12 @@ public class DAOVuelos {
 	private String url;
 
 	private String driver;
+	
+	private ArrayList<Vuelo> vuelos;
 
 	public DAOVuelos(String conectionData) {
 		initConnectionData(conectionData);
+		vuelos = new ArrayList<Vuelo>();
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -80,7 +83,7 @@ public class DAOVuelos {
 				String fs=rs.getString("FECHA_SALIDA").split(" ")[0];
 				Date fSalida = Date.valueOf(fs) ;
 				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA").split(" ")[0]) ;
-				vuelos.add(new Vuelo(id, precio, fSalida, fLlegada, aeropuertoSalida, aeropuertoLlegada));
+				vuelos.add(new Vuelo(id, precio, fLlegada, fSalida, null, null, null));
 			}
 
 		} catch (SQLException e) {
@@ -119,7 +122,7 @@ public class DAOVuelos {
 				String name = rs.getString("NAME");
 				int id = Integer.parseInt(rs.getString("ID"));
 				int duration = Integer.parseInt(rs.getString("DURATION"));
-				videos.add(new Vuelo(id, name, duration));
+				//videos.add(new Vuelo(id, costo, llegada, salida, avion, asalida, allegada));
 			}
 
 		} catch (SQLException e) {
@@ -156,7 +159,7 @@ public class DAOVuelos {
 				String name2 = rs.getString("NAME");
 				int id = Integer.parseInt(rs.getString("ID"));
 				int duration = Integer.parseInt(rs.getString("DURATION"));
-				videos.add(new Vuelo(id, name, duration));
+				//videos.add(new Vuelo(id, name, duration));
 			}
 
 		} catch (SQLException e) {
@@ -193,7 +196,7 @@ public class DAOVuelos {
 				String name2 = rs.getString("NAME");
 				int id2 = Integer.parseInt(rs.getString("ID"));
 				int duration = Integer.parseInt(rs.getString("DURATION"));
-				videos.add(new Vuelo(id, name, duration));
+				//videos.add(new Vuelo(id, name, duration));
 			}
 
 		} catch (SQLException e) {
@@ -214,6 +217,61 @@ public class DAOVuelos {
 				closeConnection(this.conexion);
 		}
 		return videos;
+	}
+	
+	//----------------------Requerimientos-------------------------//
+	
+	/**
+	 * Metodo para registrar un vuelo a la base de datos.
+	 * @param vuelo
+	 * @return
+	 * @throws SQLException
+	 * @throws Exception
+	 */
+	public Vuelo registrarVuelo(Vuelo vuelo) throws SQLException, Exception {
+		
+		PreparedStatement prepStmt = null;
+		ArrayList<Vuelo> vuelos = new ArrayList<Vuelo>();
+
+		try {
+			establecerConexion();
+			
+			String sql = "INSERT INTO ARRIBOS VALUES (";
+			sql += vuelo.getId() + ",";
+			sql += vuelo.getCosto() + ")";
+			
+			System.out.println("SQL stmt:" + sql);
+			
+			prepStmt = conexion.prepareStatement(sql);
+			ResultSet rs = prepStmt.executeQuery();
+
+			while (rs.next()) {
+//				String name2 = rs.se;
+//				int id2 = Integer.parseInt(rs.getString("ID"));
+//				int duration = Integer.parseInt(rs.getString("DURATION"));
+				//videos.add(new Vuelo(id, name, duration));
+			}
+
+		} catch (SQLException e) {
+			System.err.println("SQLException in executing:");
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (prepStmt != null) {
+				try {
+					prepStmt.close();
+				} catch (SQLException exception) {
+					System.err.println("SQLException in closing Stmt:");
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			if (this.conexion != null)
+				closeConnection(this.conexion);
+		}
+		return vuelo;
+
+				
 	}
 
 }
