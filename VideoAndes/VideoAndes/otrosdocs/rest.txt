@@ -6,4 +6,20 @@
 ------FUNCIONALES------
 
 
-RF!. Registrar usuario
+RF1. REGISTRAR USUARIO
+
+	PRECONDICION: Registra la información particular según el rol.
+				  Debe basarse en la descripción de los siguientes requerimientos
+				  para definir de manera completa la información necesaria.
+
+	FORMATO JSON:
+	{
+		"idBuque": 3,
+		"idMuelle": 6
+	}
+
+	@PUT
+	http://localhost:8080/VideoAndes/rest/salidas?user=2
+
+	POST: Se eliminó la entrada de Muelleocupado
+		  Se agregó una salida

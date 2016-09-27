@@ -76,7 +76,7 @@ public class DAOVuelos {
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 			while (rs.next()) {
-				int codigo = Integer.parseInt(rs.getString("CODIGO"));
+				String codigo = rs.getString("CODIGO");
 				int frecuencia = Integer.parseInt(rs.getString("FRECUENCIA_SEMANAL"));
 				int Salida = Integer.parseInt(rs.getString("AEROPUERTO_SALIDA"));
 				int Llegada = Integer.parseInt(rs.getString("AEROPUERTO_LLEGADA"));
@@ -84,7 +84,7 @@ public class DAOVuelos {
 				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
 				String duracion = rs.getString("DURACION");
 				int distancia = Integer.parseInt(rs.getString("DISTANCIA"));
-				vuelos.add(new Vuelo(id, precio, fLlegada, fSalida, null, null, null));
+				vuelos.add(new Vuelo(codigo, frecuencia, fLlegada, fLlegada, null, null, null, null));
 			}
 
 		} catch (SQLException e) {
@@ -238,8 +238,8 @@ public class DAOVuelos {
 			establecerConexion();
 			
 			String sql = "INSERT INTO ARRIBOS VALUES (";
-			sql += vuelo.getId() + ",";
-			sql += vuelo.getCosto() + ")";
+			//sql += vuelo.getId() + ",";
+			//sql += vuelo.getCosto() + ")";
 			
 			System.out.println("SQL stmt:" + sql);
 			
