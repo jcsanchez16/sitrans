@@ -1,4 +1,4 @@
-package fachada;
+package master;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,11 +9,9 @@ import dao.DAOVuelos;
 import vos.Vuelo;
 
 
-public class VuelAndesFachada {
+public class VuelAndesMaster {
 
-	private static VuelAndesFachada instacia;
-
-	private static final String CONNECTION_DATA_FILE_NAME_LOCAL = "/conexionLocal.properties";
+	private static VuelAndesMaster instacia;
 
 	private static final String CONNECTION_DATA_FILE_NAME_REMOTE = "/conexion.properties";
 
@@ -21,13 +19,13 @@ public class VuelAndesFachada {
 
 	private DAOVuelos daoVuelos;
 
-	public static VuelAndesFachada darInstancia(String contextPathP) {
+	public static VuelAndesMaster darInstancia(String contextPathP) {
 		connectionDataPath = contextPathP + CONNECTION_DATA_FILE_NAME_REMOTE;
-		instacia = instacia == null ? new VuelAndesFachada() : instacia;
+		instacia = instacia == null ? new VuelAndesMaster() : instacia;
 		return instacia;
 	}
 
-	private VuelAndesFachada() {
+	private VuelAndesMaster() {
 		daoVuelos = new DAOVuelos(connectionDataPath);
 	}
 
