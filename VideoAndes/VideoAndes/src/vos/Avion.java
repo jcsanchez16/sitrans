@@ -110,7 +110,9 @@ public class Avion
 		this.marca = marca;
 	}
 
-
+//	public boolean buscarVueloFechaEspecifica(Date fecha){
+//		
+//	}
 
 
 }

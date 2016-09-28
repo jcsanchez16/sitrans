@@ -23,3 +23,24 @@ RF1. REGISTRAR USUARIO
 
 	POST: Se eliminó la entrada de Muelleocupado
 		  Se agregó una salida
+		  
+		  
+RF7. ASOCIAR AERONAVE A VIAJE
+
+	PRECONDICION: Registra vuelo en una fecha específica. 
+					Es aceptada siempre y cuando las características y capacidades de
+					la aeronave no entren en conflicto con las reservas que se hayan
+					realizado sobre ese viaje.
+
+	FORMATO JSON:
+	{
+		"idBuque": 3,
+		"idMuelle": 6
+	}
+
+	@PUT
+	http://localhost:8080/VideoAndes/rest/salidas?user=2
+
+	POST: Se eliminó la entrada de Muelleocupado
+		  Se agregó una salida
+		  
