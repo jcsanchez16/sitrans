@@ -11,10 +11,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import vos.Aerolinea;
+import vos.Avion;
 import vos.Vuelo;
 import javafx.scene.control.TreeTableRow;
 
-public class DAOAviones {
+public class DAOAvion {
 
 	private Connection conexion;
 
@@ -26,11 +28,11 @@ public class DAOAviones {
 
 	private String driver;
 	
-	private ArrayList<Vuelo> vuelos;
+	private ArrayList<Avion> aviones;
 
-	public DAOAviones(String conectionData) {
+	public DAOAvion(String conectionData) {
 		initConnectionData(conectionData);
-		vuelos = new ArrayList<Vuelo>();
+		aviones = new ArrayList<Avion>();
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -84,7 +86,7 @@ public class DAOAviones {
 				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
 				String duracion = rs.getString("DURACION");
 				int distancia = Integer.parseInt(rs.getString("DISTANCIA"));
-				vuelos.add(new Vuelo(id, precio, fLlegada, fSalida, null, null, null));
+				//vuelos.add(new Vuelo(id, precio, fLlegada, fSalida, null, null, null));
 			}
 
 		} catch (SQLException e) {
@@ -222,35 +224,44 @@ public class DAOAviones {
 	
 	//----------------------Requerimientos-------------------------//
 	
-	/**
-	 * Metodo para registrar un vuelo a la base de datos.
-	 * @param vuelo
-	 * @return
-	 * @throws SQLException
-	 * @throws Exception
-	 */
-	public Vuelo registrarVuelo(Vuelo vuelo) throws SQLException, Exception {
+	public ArrayList<Avion> darAvionesQueRealizaVueloEnFechaExpecifica(Date fecha) throws Exception{
 		
 		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> vuelos = new ArrayList<Vuelo>();
+		ArrayList<Avion> aviones = new ArrayList<Avion>();
 
 		try {
 			establecerConexion();
 			
-			String sql = "INSERT INTO ARRIBOS VALUES (";
-			sql += vuelo.getId() + ",";
-			sql += vuelo.getCosto() + ")";
+			//Teniendo en cuenta unicamente aviones tenemos:
 			
-			System.out.println("SQL stmt:" + sql);
+//			String sql = "SELECT avion.* FROM VUELOS vuelo "
+//					+"INNER JOIN RESERVAS reserva ON vuelo.codigo = reserva.ID_VUELO "
+//					+"INNER JOIN AVIONES avion ON vuelo.AVION = avion.NSERIE "
+//					+ "WHERE FECHA_SALIDA = '" + fecha.toString() + "'"; //Tener en cuenta que el toString ya lo devuelve en el formato deseado
+			
+			//Sin embargo, para crear los aviones necesitamos la aerolinea tambien, entonces:
+			
+			String sql = "SELECT avion.*,aero.* FROM VUELOS vuelo "
+					+"INNER JOIN AVIONES avion ON vuelo.AVION = avion.NSERIE "
+					+"INNER JOIN RESERVAS reserva ON vuelo.codigo = reserva.ID_VUELO "
+					+"INNER JOIN AEROLINEAS aero ON aero.OACI = reserva.AEROLINEA "
+					+ "WHERE FECHA_SALIDA = '" + fecha.toString() + "'"; //Tener en cuenta que el toString ya lo devuelve en el formato deseado
+			
 			
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 
 			while (rs.next()) {
-//				String name2 = rs.se;
-//				int id2 = Integer.parseInt(rs.getString("ID"));
-//				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, name, duration));
+				int nSerie = Integer.parseInt(rs.getString("NSERIE"));
+				int modelo = Integer.parseInt(rs.getString("MODELO"));
+				int anhoFabricacion = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
+				String marca = rs.getString("MARCA");
+				String paisRadicacion = rs.getString("PAIS_RADICACION");
+				String nombre = rs.getString("NOMBRE");
+				String OACI = rs.getString("OACI");
+				String codigo = rs.getString("CODIGO");
+				
+				aviones.add(new Avion(nSerie, modelo, anhoFabricacion, marca, new Aerolinea(paisRadicacion, nombre, OACI, codigo)));
 			}
 
 		} catch (SQLException e) {
@@ -270,9 +281,7 @@ public class DAOAviones {
 			if (this.conexion != null)
 				closeConnection(this.conexion);
 		}
-		return vuelo;
+		return aviones;
 
-				
 	}
-
 }
