@@ -14,7 +14,7 @@ import java.util.Properties;
 import vos.Vuelo;
 import javafx.scene.control.TreeTableRow;
 
-public class DAOReservas {
+public class DAOReserva {
 
 	private Connection conexion;
 
@@ -28,7 +28,7 @@ public class DAOReservas {
 	
 	private ArrayList<Vuelo> vuelos;
 
-	public DAOReservas(String conectionData) {
+	public DAOReserva(String conectionData) {
 		initConnectionData(conectionData);
 		vuelos = new ArrayList<Vuelo>();
 	}
