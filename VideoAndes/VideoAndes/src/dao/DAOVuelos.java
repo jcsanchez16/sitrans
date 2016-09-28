@@ -89,28 +89,29 @@ public class DAOVuelos {
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 			while (rs.next()) {
-				String codigo = rs.getString("CODIGO");
+				int codigo = Integer.parseInt(rs.getString("CODIGO"));
 				int frecuencia = Integer.parseInt(rs.getString("FRECUENCIA_SEMANAL"));
 				String Salida = rs.getString("AEROPUERTO_SALIDA");
 				String Llegada = rs.getString("AEROPUERTO_LLEGADA");
 				Date fSalida = Date.valueOf(rs.getString("FECHA_SALIDA"));
 				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
 				int avion = Integer.parseInt(rs.getString("AVION"));
-				Avion avi = aviones.darAvionesPorSerie(avion);
+				Avion avi = aviones.buscarAvionPK(avion);
 				String aerolinea =rs.getString("AEROLINEA");
-				Aerolinea aero = aerolineas.buscarAerolineasPorOACI(aerolinea);
+				Aerolinea aero = aerolineas.buscarAerolineasPK(aerolinea);
 				String duracion = rs.getString("DURACION");
 				int distancia = Integer.parseInt(rs.getString("DISTANCIA"));
+				int realizado = Integer.parseInt(rs.getString("REALIZADO"));
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
 					Float carga = Float.parseFloat(rs.getString("PRECIO_DENSIDAD"));
-					vuelos.add(new VueloCarga(codigo, frecuencia, fLlegada, fSalida, avi, aeropuerto.buscarAeropuertoPorIata(Salida), aeropuerto.buscarAeropuertoPorIata(Llegada),aero, carga));
+					vuelos.add(new VueloCarga(codigo, frecuencia, fLlegada, fSalida, avi, aeropuerto.buscarAeropuertoPK(Salida), aeropuerto.buscarAeropuertoPK(Llegada),aero, carga,realizado, distancia, duracion));
 				}
 				else
 				{
 					Float ej = Float.parseFloat(rs.getString("PRECIO_EJECUTIVO"));
 					Float ec = Float.parseFloat(rs.getString("PRECIO_ECONOMICO"));
-					vuelos.add(new VueloPasajeros(codigo, frecuencia, fLlegada, fSalida, avi, aeropuerto.buscarAeropuertoPorIata(Salida), aeropuerto.buscarAeropuertoPorIata(Llegada),aero, ej, ec));
+					vuelos.add(new VueloPasajeros(codigo, frecuencia, fLlegada, fSalida, avi, aeropuerto.buscarAeropuertoPK(Salida), aeropuerto.buscarAeropuertoPK(Llegada),aero, ej, ec,realizado, distancia, duracion));
 				}
 					
 			}
@@ -134,6 +135,62 @@ public class DAOVuelos {
 		}
 		return vuelos;
 	}
+	
+	public Vuelo darVuelosPorPK(int codigo, String fecha, String aerolinea) throws Exception {
+		PreparedStatement prepStmt = null;
+		Vuelo vuelos =null;
+
+		try {
+			establecerConexion();
+			String sql = "SELECT * FROM VUELOS WHERE CODIGO='"+codigo+"' and FECHA_SALIDA='"+fecha+"' and AEROLINEA ='"+aerolinea+"' ";
+			prepStmt = conexion.prepareStatement(sql);
+			ResultSet rs = prepStmt.executeQuery();
+			while (rs.next()) {
+				int frecuencia = Integer.parseInt(rs.getString("FRECUENCIA_SEMANAL"));
+				String Salida = rs.getString("AEROPUERTO_SALIDA");
+				String Llegada = rs.getString("AEROPUERTO_LLEGADA");
+				Date fSalida = Date.valueOf(fecha);
+				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
+				int avion = Integer.parseInt(rs.getString("AVION"));
+				Avion avi = aviones.buscarAvionPK(avion);
+				Aerolinea aero = aerolineas.buscarAerolineasPK(aerolinea);
+				String duracion = rs.getString("DURACION");
+				int distancia = Integer.parseInt(rs.getString("DISTANCIA"));
+				int realizado = Integer.parseInt(rs.getString("REALIZADO"));
+				if(Integer.parseInt(rs.getString("TIPO"))==1)
+				{
+					Float carga = Float.parseFloat(rs.getString("PRECIO_DENSIDAD"));
+					vuelos=(new VueloCarga(codigo, frecuencia, fLlegada, fSalida, avi, aeropuerto.buscarAeropuertoPK(Salida), aeropuerto.buscarAeropuertoPK(Llegada),aero, carga,realizado, distancia, duracion));
+				}
+				else
+				{
+					Float ej = Float.parseFloat(rs.getString("PRECIO_EJECUTIVO"));
+					Float ec = Float.parseFloat(rs.getString("PRECIO_ECONOMICO"));
+					vuelos=(new VueloPasajeros(codigo, frecuencia, fLlegada, fSalida, avi, aeropuerto.buscarAeropuertoPK(Salida), aeropuerto.buscarAeropuertoPK(Llegada),aero, ej, ec,realizado, distancia, duracion));
+				}
+					
+			}
+
+		} catch (SQLException e) {
+			System.err.println("SQLException in executing:");
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (prepStmt != null) {
+				try {
+					prepStmt.close();
+				} catch (SQLException exception) {
+					System.err.println("SQLException in closing Stmt:");
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			if (this.conexion != null)
+				closeConnection(this.conexion);
+		}
+		return vuelos;
+	}
+
 
 	
 	

@@ -13,7 +13,7 @@ import sun.applet.Main;
 public class Vuelo
 {
 	//Identificador del vuelo
-	private String codigo;
+	private int codigo;
 	
 	//Costo del vuelo
 	private int frecuencia;
@@ -35,6 +35,12 @@ public class Vuelo
 	
 	private Aerolinea aerolinea;
 	
+	private boolean realizado;
+	
+	private int distancia;
+	
+	private String duracion;
+	
 	
 	/**
 	 * Metodo constructor de un vuelo
@@ -46,7 +52,7 @@ public class Vuelo
 	 * @param asalida
 	 * @param allegada
 	 */
-	public Vuelo(String codigo, int frecuencia, Date llegada, Date salida, Avion avion, Aeropuerto asalida, Aeropuerto allegada, Aerolinea aero){
+	public Vuelo(int codigo, int frecuencia, Date llegada, Date salida, Avion avion, Aeropuerto asalida, Aeropuerto allegada, Aerolinea aero, int f, int distancias, String duracion){
 		this.codigo = codigo;
 		this.frecuencia = frecuencia;
 		this.fechaLlegada = llegada;
@@ -55,15 +61,48 @@ public class Vuelo
 		this.salida = asalida;
 		this.llegada = allegada;
 		this.aerolinea = aero;
+		realizado = f==1? true : false;
+		this.distancia = distancias;
+		this.duracion = duracion;
 	}
 
 
-	public String getCodigo() {
+	public boolean isRealizado() {
+		return realizado;
+	}
+
+
+	public void setRealizado(boolean realizado) {
+		this.realizado = realizado;
+	}
+
+
+	public int getDistancia() {
+		return distancia;
+	}
+
+
+	public void setDistancia(int distancia) {
+		this.distancia = distancia;
+	}
+
+
+	public String getDuracion() {
+		return duracion;
+	}
+
+
+	public void setDuracion(String duracion) {
+		this.duracion = duracion;
+	}
+
+
+	public int getCodigo() {
 		return codigo;
 	}
 
 
-	public void setCodigo(String codigo) {
+	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
 

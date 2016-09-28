@@ -83,7 +83,7 @@ public class DAOAviones {
 			ResultSet rs = prepStmt.executeQuery();
 			while (rs.next()) {
 				int nserie = Integer.parseInt(rs.getString("NSERIE"));
-				Aerolinea aerolinea = aerolineas.buscarAerolineasPorOACI(rs.getString("AEROLINEA"));
+				Aerolinea aerolinea = aerolineas.buscarAerolineasPK(rs.getString("AEROLINEA"));
 				String marca = rs.getString("MARCA");
 				int modelo = Integer.parseInt(rs.getString("MODELO"));
 				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
@@ -120,7 +120,7 @@ public class DAOAviones {
 		return aviones;
 	}
 
-	public Avion darAvionesPorSerie(int serie) throws Exception {
+	public Avion buscarAvionPK(int serie) throws Exception {
 		PreparedStatement prepStmt = null;
 		Avion aviones = null;
 
@@ -132,7 +132,7 @@ public class DAOAviones {
 
 			while (rs.next()) {
 				int nserie = Integer.parseInt(rs.getString("NSERIE"));
-				Aerolinea aerolinea = aerolineas.buscarAerolineasPorOACI(rs.getString("AEROLINEA"));
+				Aerolinea aerolinea = aerolineas.buscarAerolineasPK(rs.getString("AEROLINEA"));
 				String marca = rs.getString("MARCA");
 				int modelo = Integer.parseInt(rs.getString("MODELO"));
 				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
@@ -170,59 +170,6 @@ public class DAOAviones {
 	}
 
 	
-	//----------------------Requerimientos-------------------------//
 	
-	/**
-	 * Metodo para registrar un vuelo a la base de datos.
-	 * @param vuelo
-	 * @return
-	 * @throws SQLException
-	 * @throws Exception
-	 */
-	public Vuelo registrarVuelo(Vuelo vuelo) throws SQLException, Exception {
-		
-		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> vuelos = new ArrayList<Vuelo>();
-
-		try {
-			establecerConexion();
-			
-			String sql = "INSERT INTO ARRIBOS VALUES (";
-			sql += vuelo.getId() + ",";
-			sql += vuelo.getCosto() + ")";
-			
-			System.out.println("SQL stmt:" + sql);
-			
-			prepStmt = conexion.prepareStatement(sql);
-			ResultSet rs = prepStmt.executeQuery();
-
-			while (rs.next()) {
-//				String name2 = rs.se;
-//				int id2 = Integer.parseInt(rs.getString("ID"));
-//				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, name, duration));
-			}
-
-		} catch (SQLException e) {
-			System.err.println("SQLException in executing:");
-			e.printStackTrace();
-			throw e;
-		} finally {
-			if (prepStmt != null) {
-				try {
-					prepStmt.close();
-				} catch (SQLException exception) {
-					System.err.println("SQLException in closing Stmt:");
-					exception.printStackTrace();
-					throw exception;
-				}
-			}
-			if (this.conexion != null)
-				closeConnection(this.conexion);
-		}
-		return vuelo;
-
-				
-	}
 
 }

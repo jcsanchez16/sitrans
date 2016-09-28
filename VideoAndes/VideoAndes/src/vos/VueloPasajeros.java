@@ -11,11 +11,11 @@ public class VueloPasajeros extends Vuelo{
 
 	private ArrayList<Cliente> clientes;
 	
-	public VueloPasajeros(String codigo, int frecuencia, Date llegada,
+	public VueloPasajeros(int codigo, int frecuencia, Date llegada,
 			Date salida, Avion avion, Aeropuerto asalida, Aeropuerto allegada,
-			Aerolinea aero, float precioE, float precioEc) 
+			Aerolinea aero, float precioE, float precioEc,int f,int distancias, String duracion) 
 	{
-		super(codigo, frecuencia, llegada, salida, avion, asalida, allegada, aero);
+		super(codigo, frecuencia, llegada, salida, avion, asalida, allegada, aero,f,distancias, duracion);
 		precioEconomico = precioEc;
 		precioEjecutivo = precioE;
 		clientes = new ArrayList<Cliente>();
