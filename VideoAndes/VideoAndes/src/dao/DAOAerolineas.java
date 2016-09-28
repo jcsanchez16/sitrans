@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import vos.Aerolinea;
 import vos.Vuelo;
 import javafx.scene.control.TreeTableRow;
 
@@ -26,11 +27,11 @@ public class DAOAerolineas {
 
 	private String driver;
 	
-	private ArrayList<Vuelo> vuelos;
+	private ArrayList<Aerolinea> Aerolineas;
 
 	public DAOAerolineas(String conectionData) {
 		initConnectionData(conectionData);
-		vuelos = new ArrayList<Vuelo>();
+		Aerolineas = new ArrayList<Aerolinea>();
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -66,25 +67,22 @@ public class DAOAerolineas {
 		}
 	}
 
-	public ArrayList<Vuelo> darVuelos() throws Exception {
+	public ArrayList<Aerolinea> darAerolineas() throws Exception {
 		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> vuelos = new ArrayList<Vuelo>();
+		ArrayList<Aerolinea> aerolineas = new ArrayList<Aerolinea>();
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM VUELOS";
+			String sql = "SELECT * FROM AEROLINEAS";
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
-			while (rs.next()) {
-				int codigo = Integer.parseInt(rs.getString("CODIGO"));
-				int frecuencia = Integer.parseInt(rs.getString("FRECUENCIA_SEMANAL"));
-				int Salida = Integer.parseInt(rs.getString("AEROPUERTO_SALIDA"));
-				int Llegada = Integer.parseInt(rs.getString("AEROPUERTO_LLEGADA"));
-				Date fSalida = Date.valueOf(rs.getString("FECHA_SALIDA"));
-				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
-				String duracion = rs.getString("DURACION");
-				int distancia = Integer.parseInt(rs.getString("DISTANCIA"));
-				vuelos.add(new Vuelo(id, precio, fLlegada, fSalida, null, null, null));
+			while (rs.next()) 	
+			{
+				String OACI = rs.getString("OACI");
+				String pais = rs.getString("PAIS_RADICACION");
+				String nombre = rs.getString("NOMBRE");
+				String codigo = rs.getString("CODIGO");
+				aerolineas.add(new Aerolinea(pais, nombre, OACI, codigo));
 			}
 
 		} catch (SQLException e) {
@@ -104,26 +102,25 @@ public class DAOAerolineas {
 			if (this.conexion != null)
 				closeConnection(this.conexion);
 		}
-		return vuelos;
+		return aerolineas;
 	}
 
-	public ArrayList<Vuelo> darVideosConError() throws Exception {
+	public Aerolinea buscarAerolineasPorOACI(String OACI) throws Exception {
 		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> videos = new ArrayList<Vuelo>();
+		Aerolinea aerolineas = null;
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM VIDEOSSS"; // intencionalmente se
-													// escribe mal VIDEOS para
-													// que lance error.
+			String sql = "SELECT * FROM AEROLINEAS WHERE OACI ='" +OACI + "'";
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 
-			while (rs.next()) {
-				String name = rs.getString("NAME");
-				int id = Integer.parseInt(rs.getString("ID"));
-				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, costo, llegada, salida, avion, asalida, allegada));
+			while (rs.next()) 
+			{
+				String pais = rs.getString("PAIS_RADICACION");
+				String nombre = rs.getString("NOMBRE");
+				String codigo = rs.getString("CODIGO");
+				aerolineas=(new Aerolinea(pais, nombre, OACI, codigo));
 			}
 
 		} catch (SQLException e) {
@@ -143,82 +140,10 @@ public class DAOAerolineas {
 			if (this.conexion != null)
 				closeConnection(this.conexion);
 		}
-		return videos;
+		return aerolineas;
 	}
 
-	public ArrayList<Vuelo> buscarVideosPorName(String name) throws Exception {
-		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> videos = new ArrayList<Vuelo>();
-
-		try {
-			establecerConexion();
-			String sql = "SELECT * FROM VIDEOS WHERE NAME ='" + name + "'";
-			prepStmt = conexion.prepareStatement(sql);
-			ResultSet rs = prepStmt.executeQuery();
-
-			while (rs.next()) {
-				String name2 = rs.getString("NAME");
-				int id = Integer.parseInt(rs.getString("ID"));
-				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, name, duration));
-			}
-
-		} catch (SQLException e) {
-			System.err.println("SQLException in executing:");
-			e.printStackTrace();
-			throw e;
-		} finally {
-			if (prepStmt != null) {
-				try {
-					prepStmt.close();
-				} catch (SQLException exception) {
-					System.err.println("SQLException in closing Stmt:");
-					exception.printStackTrace();
-					throw exception;
-				}
-			}
-			if (this.conexion != null)
-				closeConnection(this.conexion);
-		}
-		return videos;
-	}
-
-	public ArrayList<Vuelo> buscarVideosPorNameYId(String name, int id) throws Exception {
-		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> videos = new ArrayList<Vuelo>();
-
-		try {
-			establecerConexion();
-			String sql = "SELECT * FROM VIDEOS WHERE NAME ='" + name + "' and ID = " + id;
-			prepStmt = conexion.prepareStatement(sql);
-			ResultSet rs = prepStmt.executeQuery();
-
-			while (rs.next()) {
-				String name2 = rs.getString("NAME");
-				int id2 = Integer.parseInt(rs.getString("ID"));
-				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, name, duration));
-			}
-
-		} catch (SQLException e) {
-			System.err.println("SQLException in executing:");
-			e.printStackTrace();
-			throw e;
-		} finally {
-			if (prepStmt != null) {
-				try {
-					prepStmt.close();
-				} catch (SQLException exception) {
-					System.err.println("SQLException in closing Stmt:");
-					exception.printStackTrace();
-					throw exception;
-				}
-			}
-			if (this.conexion != null)
-				closeConnection(this.conexion);
-		}
-		return videos;
-	}
+	
 	
 	//----------------------Requerimientos-------------------------//
 	

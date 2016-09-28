@@ -4,30 +4,30 @@ import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
 public class AvionPasajeros extends Avion
 {
-	private float asientosEconomica;
+	private int asientosEconomica;
 	
-	private float asientosEjecutivo;
+	private int asientosEjecutivo;
 	
-	public AvionPasajeros(int nSerie, int modelo, int anhoFabricacion, String marca, float capacidad, Aerolinea aerolinea) 
+	public AvionPasajeros(int nSerie, int modelo, int anhoFabricacion, String marca, int asientosEconomica,int asientosEjecutivo, Aerolinea aerolinea) 
 	{
 		super(nSerie, modelo, anhoFabricacion, marca, aerolinea);
 		this.asientosEconomica = asientosEconomica;
 		this.asientosEjecutivo = asientosEjecutivo;
 	}
 
-	public float getAsientosEconomica() {
+	public int getAsientosEconomica() {
 		return asientosEconomica;
 	}
 
-	public void setAsientosEconomica(float asientosEconomica) {
+	public void setAsientosEconomica(int asientosEconomica) {
 		this.asientosEconomica = asientosEconomica;
 	}
 
-	public float getAsientosEjecutivo() {
+	public int getAsientosEjecutivo() {
 		return asientosEjecutivo;
 	}
 
-	public void setAsientosEjecutivo(float asientosEjecutivo) {
+	public void setAsientosEjecutivo(int asientosEjecutivo) {
 		this.asientosEjecutivo = asientosEjecutivo;
 	}
 	

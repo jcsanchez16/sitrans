@@ -27,10 +27,13 @@ public class DAOVuelos {
 	private String driver;
 	
 	private ArrayList<Vuelo> vuelos;
+	
+	private DAOAviones aviones;
 
 	public DAOVuelos(String conectionData) {
 		initConnectionData(conectionData);
 		vuelos = new ArrayList<Vuelo>();
+		aviones = new DAOAviones(conectionData);
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -82,8 +85,8 @@ public class DAOVuelos {
 				int Llegada = Integer.parseInt(rs.getString("AEROPUERTO_LLEGADA"));
 				Date fSalida = Date.valueOf(rs.getString("FECHA_SALIDA"));
 				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
-				String duracion = rs.getString("DURACION");
-				int distancia = Integer.parseInt(rs.getString("DISTANCIA"));
+				int avion = Integer.parseInt(rs.getString("AVION"));
+				Avion avi = 
 				vuelos.add(new Vuelo(id, precio, fLlegada, fSalida, null, null, null));
 			}
 

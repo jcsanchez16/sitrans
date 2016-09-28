@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import vos.Cliente;
+import vos.Remitente;
 import vos.Vuelo;
 import javafx.scene.control.TreeTableRow;
 
@@ -26,11 +28,11 @@ public class DAOClientes {
 
 	private String driver;
 	
-	private ArrayList<Vuelo> vuelos;
+	private ArrayList<Cliente> clientes;
 
 	public DAOClientes(String conectionData) {
 		initConnectionData(conectionData);
-		vuelos = new ArrayList<Vuelo>();
+		clientes = new ArrayList<Cliente>();
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -66,25 +68,28 @@ public class DAOClientes {
 		}
 	}
 
-	public ArrayList<Vuelo> darVuelos() throws Exception {
+	public ArrayList<Cliente> darClientes() throws Exception {
 		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> vuelos = new ArrayList<Vuelo>();
+		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM VUELOS";
+			String sql = "SELECT * FROM CLIENTES";
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 			while (rs.next()) {
-				int codigo = Integer.parseInt(rs.getString("CODIGO"));
-				int frecuencia = Integer.parseInt(rs.getString("FRECUENCIA_SEMANAL"));
-				int Salida = Integer.parseInt(rs.getString("AEROPUERTO_SALIDA"));
-				int Llegada = Integer.parseInt(rs.getString("AEROPUERTO_LLEGADA"));
-				Date fSalida = Date.valueOf(rs.getString("FECHA_SALIDA"));
-				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
-				String duracion = rs.getString("DURACION");
-				int distancia = Integer.parseInt(rs.getString("DISTANCIA"));
-				vuelos.add(new Vuelo(id, precio, fLlegada, fSalida, null, null, null));
+				int identificacion = Integer.parseInt(rs.getString("IDENTIFICACION"));
+				String nombre= rs.getString("NOMBRE");
+				String nacionalidad = rs.getString("NACIONALIDAD");
+				String correo = rs.getString("CORREO");
+				String tip = rs.getString("TIPO_IDENTIFICACION");
+				if(Integer.parseInt(rs.getString("TIPO"))==1)
+				{
+					float densidad =Float.parseFloat(rs.getString("DENSIDAD_CARGA"));
+					clientes.add(new Remitente(identificacion, nombre, nacionalidad, correo, tip, densidad));
+				}
+				else
+				clientes.add(new Cliente(identificacion, nombre, nacionalidad, correo, tip));
 			}
 
 		} catch (SQLException e) {
@@ -104,27 +109,32 @@ public class DAOClientes {
 			if (this.conexion != null)
 				closeConnection(this.conexion);
 		}
-		return vuelos;
+		return clientes;
 	}
 
-	public ArrayList<Vuelo> darVideosConError() throws Exception {
+	public Cliente buscarClientePorIdyTipoId(int id, String tip) throws Exception {
 		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> videos = new ArrayList<Vuelo>();
+		Cliente cliente = null;
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM VIDEOSSS"; // intencionalmente se
-													// escribe mal VIDEOS para
-													// que lance error.
+			String sql = "SELECT * FROM VIDEOS WHERE IDENTIFICACION ='" + id + "' and TIPO_IDENTIFICACION ='"+tip+"'";
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 
 			while (rs.next()) {
-				String name = rs.getString("NAME");
-				int id = Integer.parseInt(rs.getString("ID"));
-				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, costo, llegada, salida, avion, asalida, allegada));
+				String nombre= rs.getString("NOMBRE");
+				String nacionalidad = rs.getString("NACIONALIDAD");
+				String correo = rs.getString("CORREO");
+				if(Integer.parseInt(rs.getString("TIPO"))==1)
+				{
+					float densidad =Float.parseFloat(rs.getString("DENSIDAD_CARGA"));
+					cliente=(new Remitente(id, nombre, nacionalidad, correo, tip, densidad));
+				}
+				else
+				cliente=(new Cliente(id, nombre, nacionalidad, correo, tip));
 			}
+			
 
 		} catch (SQLException e) {
 			System.err.println("SQLException in executing:");
@@ -143,82 +153,10 @@ public class DAOClientes {
 			if (this.conexion != null)
 				closeConnection(this.conexion);
 		}
-		return videos;
+		return cliente;
 	}
 
-	public ArrayList<Vuelo> buscarVideosPorName(String name) throws Exception {
-		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> videos = new ArrayList<Vuelo>();
-
-		try {
-			establecerConexion();
-			String sql = "SELECT * FROM VIDEOS WHERE NAME ='" + name + "'";
-			prepStmt = conexion.prepareStatement(sql);
-			ResultSet rs = prepStmt.executeQuery();
-
-			while (rs.next()) {
-				String name2 = rs.getString("NAME");
-				int id = Integer.parseInt(rs.getString("ID"));
-				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, name, duration));
-			}
-
-		} catch (SQLException e) {
-			System.err.println("SQLException in executing:");
-			e.printStackTrace();
-			throw e;
-		} finally {
-			if (prepStmt != null) {
-				try {
-					prepStmt.close();
-				} catch (SQLException exception) {
-					System.err.println("SQLException in closing Stmt:");
-					exception.printStackTrace();
-					throw exception;
-				}
-			}
-			if (this.conexion != null)
-				closeConnection(this.conexion);
-		}
-		return videos;
-	}
-
-	public ArrayList<Vuelo> buscarVideosPorNameYId(String name, int id) throws Exception {
-		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> videos = new ArrayList<Vuelo>();
-
-		try {
-			establecerConexion();
-			String sql = "SELECT * FROM VIDEOS WHERE NAME ='" + name + "' and ID = " + id;
-			prepStmt = conexion.prepareStatement(sql);
-			ResultSet rs = prepStmt.executeQuery();
-
-			while (rs.next()) {
-				String name2 = rs.getString("NAME");
-				int id2 = Integer.parseInt(rs.getString("ID"));
-				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, name, duration));
-			}
-
-		} catch (SQLException e) {
-			System.err.println("SQLException in executing:");
-			e.printStackTrace();
-			throw e;
-		} finally {
-			if (prepStmt != null) {
-				try {
-					prepStmt.close();
-				} catch (SQLException exception) {
-					System.err.println("SQLException in closing Stmt:");
-					exception.printStackTrace();
-					throw exception;
-				}
-			}
-			if (this.conexion != null)
-				closeConnection(this.conexion);
-		}
-		return videos;
-	}
+	
 	
 	//----------------------Requerimientos-------------------------//
 	

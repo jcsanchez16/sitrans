@@ -11,6 +11,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import vos.Aerolinea;
+import vos.Avion;
+import vos.AvionCarga;
+import vos.AvionPasajeros;
 import vos.Vuelo;
 import javafx.scene.control.TreeTableRow;
 
@@ -26,11 +30,13 @@ public class DAOAviones {
 
 	private String driver;
 	
-	private ArrayList<Vuelo> vuelos;
+	private ArrayList<Avion> aviones;
+	private DAOAerolineas aerolineas;
 
 	public DAOAviones(String conectionData) {
 		initConnectionData(conectionData);
-		vuelos = new ArrayList<Vuelo>();
+		aviones = new ArrayList<Avion>();
+		aerolineas = new DAOAerolineas(conectionData);
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -66,25 +72,32 @@ public class DAOAviones {
 		}
 	}
 
-	public ArrayList<Vuelo> darVuelos() throws Exception {
+	public ArrayList<Avion> darAviones() throws Exception {
 		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> vuelos = new ArrayList<Vuelo>();
+		ArrayList<Avion> aviones = new ArrayList<Avion>();
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM VUELOS";
+			String sql = "SELECT * FROM AVIONES";
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 			while (rs.next()) {
-				int codigo = Integer.parseInt(rs.getString("CODIGO"));
-				int frecuencia = Integer.parseInt(rs.getString("FRECUENCIA_SEMANAL"));
-				int Salida = Integer.parseInt(rs.getString("AEROPUERTO_SALIDA"));
-				int Llegada = Integer.parseInt(rs.getString("AEROPUERTO_LLEGADA"));
-				Date fSalida = Date.valueOf(rs.getString("FECHA_SALIDA"));
-				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
-				String duracion = rs.getString("DURACION");
-				int distancia = Integer.parseInt(rs.getString("DISTANCIA"));
-				vuelos.add(new Vuelo(id, precio, fLlegada, fSalida, null, null, null));
+				int nserie = Integer.parseInt(rs.getString("NSERIE"));
+				Aerolinea aerolinea = aerolineas.buscarAerolineasPorOACI(rs.getString("AEROLINEA"));
+				String marca = rs.getString("MARCA");
+				int modelo = Integer.parseInt(rs.getString("MODELO"));
+				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
+				if(Integer.parseInt(rs.getString("TIPO"))==1)
+				{
+					float carga = Float.parseFloat(rs.getString("CAPACIDAD_DENSIDAD"));
+					aviones.add(new AvionCarga(nserie, modelo, ano, marca, carga, aerolinea));
+				}
+				else
+				{
+					int asientosEjecutivo= Integer.parseInt(rs.getString("ASIENTOS_EJECUTIVO"));
+					int asientosEconomica= Integer.parseInt(rs.getString("ASIENTOS_ECONOMICA"));
+					aviones.add(new AvionPasajeros(nserie, modelo, ano, marca, asientosEconomica, asientosEjecutivo, aerolinea));
+				}
 			}
 
 		} catch (SQLException e) {
@@ -104,26 +117,36 @@ public class DAOAviones {
 			if (this.conexion != null)
 				closeConnection(this.conexion);
 		}
-		return vuelos;
+		return aviones;
 	}
 
-	public ArrayList<Vuelo> darVideosConError() throws Exception {
+	public Avion darAvionesPorSerie(int serie) throws Exception {
 		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> videos = new ArrayList<Vuelo>();
+		Avion aviones = null;
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM VIDEOSSS"; // intencionalmente se
-													// escribe mal VIDEOS para
-													// que lance error.
+			String sql = "SELECT * FROM AVIONES WHERE NSERIE='"+ serie+"'"; 
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 
 			while (rs.next()) {
-				String name = rs.getString("NAME");
-				int id = Integer.parseInt(rs.getString("ID"));
-				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, costo, llegada, salida, avion, asalida, allegada));
+				int nserie = Integer.parseInt(rs.getString("NSERIE"));
+				Aerolinea aerolinea = aerolineas.buscarAerolineasPorOACI(rs.getString("AEROLINEA"));
+				String marca = rs.getString("MARCA");
+				int modelo = Integer.parseInt(rs.getString("MODELO"));
+				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
+				if(Integer.parseInt(rs.getString("TIPO"))==1)
+				{
+					float carga = Float.parseFloat(rs.getString("CAPACIDAD_DENSIDAD"));
+					aviones=(new AvionCarga(nserie, modelo, ano, marca, carga, aerolinea));
+				}
+				else
+				{
+					int asientosEjecutivo= Integer.parseInt(rs.getString("ASIENTOS_EJECUTIVO"));
+					int asientosEconomica= Integer.parseInt(rs.getString("ASIENTOS_ECONOMICA"));
+					aviones=(new AvionPasajeros(nserie, modelo, ano, marca, asientosEconomica, asientosEjecutivo, aerolinea));
+				}
 			}
 
 		} catch (SQLException e) {
@@ -143,82 +166,9 @@ public class DAOAviones {
 			if (this.conexion != null)
 				closeConnection(this.conexion);
 		}
-		return videos;
+		return aviones;
 	}
 
-	public ArrayList<Vuelo> buscarVideosPorName(String name) throws Exception {
-		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> videos = new ArrayList<Vuelo>();
-
-		try {
-			establecerConexion();
-			String sql = "SELECT * FROM VIDEOS WHERE NAME ='" + name + "'";
-			prepStmt = conexion.prepareStatement(sql);
-			ResultSet rs = prepStmt.executeQuery();
-
-			while (rs.next()) {
-				String name2 = rs.getString("NAME");
-				int id = Integer.parseInt(rs.getString("ID"));
-				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, name, duration));
-			}
-
-		} catch (SQLException e) {
-			System.err.println("SQLException in executing:");
-			e.printStackTrace();
-			throw e;
-		} finally {
-			if (prepStmt != null) {
-				try {
-					prepStmt.close();
-				} catch (SQLException exception) {
-					System.err.println("SQLException in closing Stmt:");
-					exception.printStackTrace();
-					throw exception;
-				}
-			}
-			if (this.conexion != null)
-				closeConnection(this.conexion);
-		}
-		return videos;
-	}
-
-	public ArrayList<Vuelo> buscarVideosPorNameYId(String name, int id) throws Exception {
-		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> videos = new ArrayList<Vuelo>();
-
-		try {
-			establecerConexion();
-			String sql = "SELECT * FROM VIDEOS WHERE NAME ='" + name + "' and ID = " + id;
-			prepStmt = conexion.prepareStatement(sql);
-			ResultSet rs = prepStmt.executeQuery();
-
-			while (rs.next()) {
-				String name2 = rs.getString("NAME");
-				int id2 = Integer.parseInt(rs.getString("ID"));
-				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, name, duration));
-			}
-
-		} catch (SQLException e) {
-			System.err.println("SQLException in executing:");
-			e.printStackTrace();
-			throw e;
-		} finally {
-			if (prepStmt != null) {
-				try {
-					prepStmt.close();
-				} catch (SQLException exception) {
-					System.err.println("SQLException in closing Stmt:");
-					exception.printStackTrace();
-					throw exception;
-				}
-			}
-			if (this.conexion != null)
-				closeConnection(this.conexion);
-		}
-		return videos;
-	}
 	
 	//----------------------Requerimientos-------------------------//
 	
