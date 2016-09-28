@@ -224,6 +224,20 @@ public class DAOAvion {
 	
 	//----------------------Requerimientos-------------------------//
 	
+	/**
+	 * RF7 - ASOCIAR AERONAVE A VIAJE
+	 * Registra la información de cuál aeronave va a realizar efectivamente un viaje
+	 * (vuelo en una fecha específica). Esta información es necesaria para toda la gestión
+	 * de reservas que se quiere realizar. Esta operación es realizada por un usuario de Aerolínea.
+	 * Es aceptada siempre y cuando las características y capacidades de la aeronave no entren en conflicto
+	 * con las reservas que se hayan realizado sobre ese viaje.
+	 * 
+	 * Da los aviones que realizan un vuelo en cierta fecha especifica.
+	 * 
+	 * @param fecha
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList<Avion> darAvionesQueRealizaVueloEnFechaExpecifica(Date fecha) throws Exception{
 		
 		PreparedStatement prepStmt = null;
