@@ -15,6 +15,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import master.VuelAndesMaster;
+import vos.Aerolinea;
+import vos.Aeropuerto;
+import vos.Avion;
+import vos.Cliente;
 import vos.Vuelo;
 
 @Path("api")
@@ -32,9 +36,8 @@ public class VuelosServices {
 	@GET
 	@Path("/vuelos")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response GetVideosGET() {
+	public Response GetVideos() {
 		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
-		System.out.println("holi mundo");
 		ArrayList<Vuelo> vuelos = null;
 		try {
 			vuelos = master.darVuelos();
@@ -45,15 +48,74 @@ public class VuelosServices {
 		}
 		return Response.status(200).entity(vuelos).build();
 	}
-
 	@GET
-	@Path("/GetVideosGETError")
+	@Path("/Aerolineas")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response GetVideosGETError() {
+	public Response GetAerolineas() {
+		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
+		ArrayList<Aerolinea> a = null;
+		try {
+			a = master.darAerolineas();
+		} catch (Exception e) {
+			ArrayList<String> temp = new ArrayList<String>();
+			temp.add(e.getMessage());
+			return Response.status(500).entity(temp).build();
+		}
+		return Response.status(200).entity(a).build();
+	}
+	@GET
+	@Path("/Aeropuertos")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response GetAeropuertos() {
+		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
+		ArrayList<Aeropuerto> a = null;
+		try {
+			a = master.darAerpuertos();
+		} catch (Exception e) {
+			ArrayList<String> temp = new ArrayList<String>();
+			temp.add(e.getMessage());
+			return Response.status(500).entity(temp).build();
+		}
+		return Response.status(200).entity(a).build();
+	}
+	@GET
+	@Path("/Clientes")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response GetClientesT() {
+		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
+		ArrayList<Cliente> clientes = null;
+		try {
+			clientes = master.darCLientes();
+		} catch (Exception e) {
+			ArrayList<String> temp = new ArrayList<String>();
+			temp.add(e.getMessage());
+			return Response.status(500).entity(temp).build();
+		}
+		return Response.status(200).entity(clientes).build();
+	}
+	@GET
+	@Path("/Aviones")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response GetAviones() {
+		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
+		ArrayList<Avion> a = null;
+		try {
+			a = master.darAviones();
+		} catch (Exception e) {
+			ArrayList<String> temp = new ArrayList<String>();
+			temp.add(e.getMessage());
+			return Response.status(500).entity(temp).build();
+		}
+		return Response.status(200).entity(a).build();
+	}
+	@GET
+	@Path("/Reservas")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response GetVideosGET() {
 		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
 		ArrayList<Vuelo> vuelos = null;
 		try {
-			vuelos = master.darVideosConError();
+			vuelos = master.darVuelos();
 		} catch (Exception e) {
 			ArrayList<String> temp = new ArrayList<String>();
 			temp.add(e.getMessage());
@@ -61,9 +123,9 @@ public class VuelosServices {
 		}
 		return Response.status(200).entity(vuelos).build();
 	}
-
+	
 	@GET
-	@Path("/GetVideosByNameGET")
+	@Path("/vuelosdfdd")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response GetVideosByNameGET(@QueryParam("name") String name) {
 		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());

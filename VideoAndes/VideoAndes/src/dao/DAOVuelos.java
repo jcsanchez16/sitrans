@@ -94,6 +94,7 @@ public class DAOVuelos {
 				String Salida = rs.getString("AEROPUERTO_SALIDA");
 				String Llegada = rs.getString("AEROPUERTO_LLEGADA");
 				Date fSalida = Date.valueOf(rs.getString("FECHA_SALIDA"));
+				String g = rs.getString("FECHA_LLEGADA");
 				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
 				int avion = Integer.parseInt(rs.getString("AVION"));
 				Avion avi = aviones.buscarAvionPK(avion);
@@ -101,11 +102,7 @@ public class DAOVuelos {
 				Aerolinea aero = aerolineas.buscarAerolineasPK(aerolinea);
 				String duracion = rs.getString("DURACION");
 				int distancia = Integer.parseInt(rs.getString("DISTANCIA"));
-<<<<<<< HEAD
 				int realizado = Integer.parseInt(rs.getString("REALIZADO"));
-=======
-
->>>>>>> db875ae6cc96870157965a9c91bdbfb2f751104d
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
 					Float carga = Float.parseFloat(rs.getString("PRECIO_DENSIDAD"));

@@ -157,17 +157,4 @@ public class DAOCliente {
 		}
 		return cliente;
 	}
-
-<<<<<<< HEAD:VideoAndes/VideoAndes/src/dao/DAOClientes.java
-=======
-	
-	
-	//----------------------Requerimientos-------------------------//
-	
-
-	
-	
-	
-
->>>>>>> db875ae6cc96870157965a9c91bdbfb2f751104d:VideoAndes/VideoAndes/src/dao/DAOCliente.java
 }

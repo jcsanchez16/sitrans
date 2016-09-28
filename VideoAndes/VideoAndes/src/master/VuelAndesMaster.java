@@ -8,8 +8,8 @@ import java.util.Properties;
 import dao.DAOAerolineas;
 import dao.DAOAeropuertos;
 import dao.DAOAviones;
-import dao.DAOClientes;
-import dao.DAOReservas;
+import dao.DAOCliente;
+import dao.DAOReserva;
 import dao.DAOVuelos;
 import vos.Aerolinea;
 import vos.Aeropuerto;
@@ -34,9 +34,9 @@ public class VuelAndesMaster {
 	
 	private DAOAviones daoAviones;
 	
-	private DAOClientes daoClientes;
+	private DAOCliente daoClientes;
 	
-	private DAOReservas daoReservas;
+	private DAOReserva daoReservas;
 	
 	public static VuelAndesMaster darInstancia(String contextPathP) {
 		connectionDataPath = contextPathP + CONNECTION_DATA_FILE_NAME_REMOTE;
@@ -49,8 +49,8 @@ public class VuelAndesMaster {
 		daoAerolineas = new DAOAerolineas(connectionDataPath);
 		daoAeropuertos = new DAOAeropuertos(connectionDataPath);
 		daoAviones = new DAOAviones(connectionDataPath);
-		daoClientes = new DAOClientes(connectionDataPath);
-		daoReservas = new DAOReservas(connectionDataPath);
+		daoClientes = new DAOCliente(connectionDataPath);
+		daoReservas = new DAOReserva(connectionDataPath);
 		daoVuelos = new DAOVuelos(connectionDataPath);
 		}
 
@@ -91,12 +91,12 @@ public class VuelAndesMaster {
 		return daoAviones.buscarAvionPK(c);
 	}
 	public ArrayList<Cliente> darCLientes() throws Exception {
-		daoClientes = daoClientes == null ? new DAOClientes(connectionDataPath) : daoClientes;
+		daoClientes = daoClientes == null ? new DAOCliente(connectionDataPath) : daoClientes;
 		return daoClientes.darClientes();
 	}
 	public Cliente buscaClientePK(int id, String tip )throws Exception
 	{
-		daoClientes = daoClientes == null ? new DAOClientes(connectionDataPath) : daoClientes;
+		daoClientes = daoClientes == null ? new DAOCliente(connectionDataPath) : daoClientes;
 		return daoClientes.buscarClientePK(id, tip);
 	}
 }
