@@ -34,19 +34,4 @@ public class VuelAndesMaster {
 		return daoVuelos.darVuelos();
 	}
 
-	public ArrayList<Vuelo> darVideosConError() throws Exception {
-		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
-		return daoVuelos.darVideosConError();
-	}
-
-	public ArrayList<Vuelo> buscarVideosPorName(String name) throws Exception {
-		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
-		return daoVuelos.buscarVideosPorName(name);
-	}
-
-	public ArrayList<Vuelo> buscarVideosPorNameYId(String name, int id) throws Exception {
-		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
-		return daoVuelos.buscarVideosPorNameYId(name, id);
-	}
-
 }
