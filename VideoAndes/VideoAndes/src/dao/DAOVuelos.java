@@ -27,10 +27,13 @@ public class DAOVuelos {
 	private String driver;
 	
 	private ArrayList<Vuelo> vuelos;
+	
+	private DAOAviones aviones;
 
 	public DAOVuelos(String conectionData) {
 		initConnectionData(conectionData);
 		vuelos = new ArrayList<Vuelo>();
+		aviones = new DAOAviones(conectionData);
 	}
 
 	private void initConnectionData(String conectionData) {

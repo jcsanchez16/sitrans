@@ -11,12 +11,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import vos.Cliente;
-import vos.Remitente;
+import vos.Aerolinea;
+import vos.Avion;
+import vos.AvionCarga;
+import vos.AvionPasajeros;
 import vos.Vuelo;
 import javafx.scene.control.TreeTableRow;
 
-public class DAOClientes {
+public class DAOAviones {
 
 	private Connection conexion;
 
@@ -28,11 +30,13 @@ public class DAOClientes {
 
 	private String driver;
 	
-	private ArrayList<Cliente> clientes;
+	private ArrayList<Avion> aviones;
+	private DAOAerolineas aerolineas;
 
-	public DAOClientes(String conectionData) {
+	public DAOAviones(String conectionData) {
 		initConnectionData(conectionData);
-		clientes = new ArrayList<Cliente>();
+		aviones = new ArrayList<Avion>();
+		aerolineas = new DAOAerolineas(conectionData);
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -68,28 +72,32 @@ public class DAOClientes {
 		}
 	}
 
-	public ArrayList<Cliente> darClientes() throws Exception {
+	public ArrayList<Avion> darAviones() throws Exception {
 		PreparedStatement prepStmt = null;
-		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
+		ArrayList<Avion> aviones = new ArrayList<Avion>();
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM CLIENTES";
+			String sql = "SELECT * FROM AVIONES";
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 			while (rs.next()) {
-				int identificacion = Integer.parseInt(rs.getString("IDENTIFICACION"));
-				String nombre= rs.getString("NOMBRE");
-				String nacionalidad = rs.getString("NACIONALIDAD");
-				String correo = rs.getString("CORREO");
-				String tip = rs.getString("TIPO_IDENTIFICACION");
+				int nserie = Integer.parseInt(rs.getString("NSERIE"));
+				Aerolinea aerolinea = aerolineas.buscarAerolineasPorOACI(rs.getString("AEROLINEA"));
+				String marca = rs.getString("MARCA");
+				int modelo = Integer.parseInt(rs.getString("MODELO"));
+				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
-					float densidad =Float.parseFloat(rs.getString("DENSIDAD_CARGA"));
-					clientes.add(new Remitente(identificacion, nombre, nacionalidad, correo, tip, densidad));
+					float carga = Float.parseFloat(rs.getString("CAPACIDAD_DENSIDAD"));
+					aviones.add(new AvionCarga(nserie, modelo, ano, marca, carga, aerolinea));
 				}
 				else
-				clientes.add(new Cliente(identificacion, nombre, nacionalidad, correo, tip));
+				{
+					int asientosEjecutivo= Integer.parseInt(rs.getString("ASIENTOS_EJECUTIVO"));
+					int asientosEconomica= Integer.parseInt(rs.getString("ASIENTOS_ECONOMICA"));
+					aviones.add(new AvionPasajeros(nserie, modelo, ano, marca, asientosEconomica, asientosEjecutivo, aerolinea));
+				}
 			}
 
 		} catch (SQLException e) {
@@ -109,32 +117,37 @@ public class DAOClientes {
 			if (this.conexion != null)
 				closeConnection(this.conexion);
 		}
-		return clientes;
+		return aviones;
 	}
 
-	public Cliente buscarClientePorIdyTipoId(int id, String tip) throws Exception {
+	public Avion darAvionesPorSerie(int serie) throws Exception {
 		PreparedStatement prepStmt = null;
-		Cliente cliente = null;
+		Avion aviones = null;
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM VIDEOS WHERE IDENTIFICACION ='" + id + "' and TIPO_IDENTIFICACION ='"+tip+"'";
+			String sql = "SELECT * FROM AVIONES WHERE NSERIE='"+ serie+"'"; 
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 
 			while (rs.next()) {
-				String nombre= rs.getString("NOMBRE");
-				String nacionalidad = rs.getString("NACIONALIDAD");
-				String correo = rs.getString("CORREO");
+				int nserie = Integer.parseInt(rs.getString("NSERIE"));
+				Aerolinea aerolinea = aerolineas.buscarAerolineasPorOACI(rs.getString("AEROLINEA"));
+				String marca = rs.getString("MARCA");
+				int modelo = Integer.parseInt(rs.getString("MODELO"));
+				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
-					float densidad =Float.parseFloat(rs.getString("DENSIDAD_CARGA"));
-					cliente=(new Remitente(id, nombre, nacionalidad, correo, tip, densidad));
+					float carga = Float.parseFloat(rs.getString("CAPACIDAD_DENSIDAD"));
+					aviones=(new AvionCarga(nserie, modelo, ano, marca, carga, aerolinea));
 				}
 				else
-				cliente=(new Cliente(id, nombre, nacionalidad, correo, tip));
+				{
+					int asientosEjecutivo= Integer.parseInt(rs.getString("ASIENTOS_EJECUTIVO"));
+					int asientosEconomica= Integer.parseInt(rs.getString("ASIENTOS_ECONOMICA"));
+					aviones=(new AvionPasajeros(nserie, modelo, ano, marca, asientosEconomica, asientosEjecutivo, aerolinea));
+				}
 			}
-			
 
 		} catch (SQLException e) {
 			System.err.println("SQLException in executing:");
@@ -153,10 +166,9 @@ public class DAOClientes {
 			if (this.conexion != null)
 				closeConnection(this.conexion);
 		}
-		return cliente;
+		return aviones;
 	}
 
-	
 	
 	//----------------------Requerimientos-------------------------//
 	
