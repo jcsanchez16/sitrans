@@ -16,7 +16,7 @@ import vos.Remitente;
 import vos.Vuelo;
 import javafx.scene.control.TreeTableRow;
 
-public class DAOClientes {
+public class DAOCliente {
 
 	private Connection conexion;
 
@@ -30,7 +30,7 @@ public class DAOClientes {
 	
 	private ArrayList<Cliente> clientes;
 
-	public DAOClientes(String conectionData) {
+	public DAOCliente(String conectionData) {
 		initConnectionData(conectionData);
 		clientes = new ArrayList<Cliente>();
 	}
@@ -212,5 +212,8 @@ public class DAOClientes {
 
 				
 	}
+	
+	
+	
 
 }
