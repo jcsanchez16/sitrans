@@ -13,6 +13,7 @@ import java.util.Properties;
 
 import vos.Aerolinea;
 import vos.Avion;
+import vos.Cliente;
 import vos.Vuelo;
 import vos.VueloCarga;
 import vos.VueloPasajeros;
@@ -37,6 +38,8 @@ public class DAOVuelos {
 	private DAOAerolineas aerolineas;
 	
 	private DAOAeropuertos aeropuerto;
+	
+	private DAOReserva reservas;
 
 	public DAOVuelos(String conectionData) {
 		initConnectionData(conectionData);
@@ -94,7 +97,7 @@ public class DAOVuelos {
 				String Salida = rs.getString("AEROPUERTO_SALIDA");
 				String Llegada = rs.getString("AEROPUERTO_LLEGADA");
 				Date fSalida = Date.valueOf(rs.getString("FECHA_SALIDA"));
-				String g = rs.getString("FECHA_LLEGADA");
+				String g = rs.getString("FECHA_SALIDA");
 				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
 				int avion = Integer.parseInt(rs.getString("AVION"));
 				Avion avi = aviones.buscarAvionPK(avion);
@@ -112,7 +115,9 @@ public class DAOVuelos {
 				{
 					Float ej = Float.parseFloat(rs.getString("PRECIO_EJECUTIVO"));
 					Float ec = Float.parseFloat(rs.getString("PRECIO_ECONOMICO"));
-					vuelos.add(new VueloPasajeros(codigo, frecuencia, fLlegada, fSalida, avi, aeropuerto.buscarAeropuertoPK(Salida), aeropuerto.buscarAeropuertoPK(Llegada),aero, ej, ec,realizado, distancia, duracion));
+					ArrayList<Cliente> clie =reservas.buscarReservaporvuelo(codigo, aerolinea,g);
+					vuelos.add(new VueloPasajeros(codigo, frecuencia, fLlegada, fSalida, avi, aeropuerto.buscarAeropuertoPK(Salida), aeropuerto.buscarAeropuertoPK(Llegada),aero, ej, ec,realizado, distancia, duracion,clie));
+					
 				}
 			}
 

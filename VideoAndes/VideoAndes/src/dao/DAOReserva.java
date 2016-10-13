@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import vos.Cliente;
 import vos.Vuelo;
 import javafx.scene.control.TreeTableRow;
 
@@ -27,10 +28,13 @@ public class DAOReserva {
 	private String driver;
 	
 	private ArrayList<Vuelo> vuelos;
+	
+	private DAOCliente cliente;
 
 	public DAOReserva(String conectionData) {
 		initConnectionData(conectionData);
 		vuelos = new ArrayList<Vuelo>();
+		cliente = new DAOCliente(conectionData);
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -66,7 +70,7 @@ public class DAOReserva {
 		}
 	}
 
-	public ArrayList<Vuelo> darVuelos() throws Exception {
+	public ArrayList darReservas() throws Exception {
 		PreparedStatement prepStmt = null;
 		ArrayList<Vuelo> vuelos = new ArrayList<Vuelo>();
 
@@ -107,7 +111,7 @@ public class DAOReserva {
 		return vuelos;
 	}
 
-	public ArrayList<Vuelo> darVideosConError() throws Exception {
+	public ArrayList darVideosConError() throws Exception {
 		PreparedStatement prepStmt = null;
 		ArrayList<Vuelo> videos = new ArrayList<Vuelo>();
 
@@ -146,21 +150,20 @@ public class DAOReserva {
 		return videos;
 	}
 
-	public ArrayList<Vuelo> buscarVideosPorName(String name) throws Exception {
+	public ArrayList<Cliente> buscarReservaporvuelo(int vuelo, String aerolinea, String Fecha) throws Exception {
 		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> videos = new ArrayList<Vuelo>();
+		ArrayList<Cliente> c = new ArrayList<Cliente>();
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM VIDEOS WHERE NAME ='" + name + "'";
+			String sql = "SELECT * FROM RESERVAS WHERE ID_VUELO ='" + vuelo + "' and FECHA_VUELO ='" + Fecha + "' and AEROLINEA ='" + aerolinea + "'";
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 
 			while (rs.next()) {
-				String name2 = rs.getString("NAME");
-				int id = Integer.parseInt(rs.getString("ID"));
-				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, name, duration));
+				String tip = rs.getString("TIPO_IDENTIFICACION");
+				int id = Integer.parseInt(rs.getString("ID_CLIENTE"));
+				c.add(cliente.buscarClientePK(id, tip));
 			}
 
 		} catch (SQLException e) {
@@ -180,7 +183,7 @@ public class DAOReserva {
 			if (this.conexion != null)
 				closeConnection(this.conexion);
 		}
-		return videos;
+		return c;
 	}
 
 	public ArrayList<Vuelo> buscarVideosPorNameYId(String name, int id) throws Exception {
@@ -220,59 +223,5 @@ public class DAOReserva {
 		return videos;
 	}
 	
-	//----------------------Requerimientos-------------------------//
 	
-	/**
-	 * Metodo para registrar un vuelo a la base de datos.
-	 * @param vuelo
-	 * @return
-	 * @throws SQLException
-	 * @throws Exception
-	 */
-	public Vuelo registrarVuelo(Vuelo vuelo) throws SQLException, Exception {
-		
-		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> vuelos = new ArrayList<Vuelo>();
-
-		try {
-			establecerConexion();
-			
-			String sql = "INSERT INTO ARRIBOS VALUES (";
-			sql += vuelo.getId() + ",";
-			sql += vuelo.getCosto() + ")";
-			
-			System.out.println("SQL stmt:" + sql);
-			
-			prepStmt = conexion.prepareStatement(sql);
-			ResultSet rs = prepStmt.executeQuery();
-
-			while (rs.next()) {
-//				String name2 = rs.se;
-//				int id2 = Integer.parseInt(rs.getString("ID"));
-//				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, name, duration));
-			}
-
-		} catch (SQLException e) {
-			System.err.println("SQLException in executing:");
-			e.printStackTrace();
-			throw e;
-		} finally {
-			if (prepStmt != null) {
-				try {
-					prepStmt.close();
-				} catch (SQLException exception) {
-					System.err.println("SQLException in closing Stmt:");
-					exception.printStackTrace();
-					throw exception;
-				}
-			}
-			if (this.conexion != null)
-				closeConnection(this.conexion);
-		}
-		return vuelo;
-
-				
-	}
-
 }

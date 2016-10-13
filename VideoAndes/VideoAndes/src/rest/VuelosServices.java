@@ -20,6 +20,7 @@ import vos.Aeropuerto;
 import vos.Avion;
 import vos.Cliente;
 import vos.Vuelo;
+import vos.VueloPasajeros;
 
 @Path("api")
 public class VuelosServices {
@@ -124,21 +125,7 @@ public class VuelosServices {
 		return Response.status(200).entity(vuelos).build();
 	}
 	
-	@GET
-	@Path("/vuelosdfdd")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response GetVideosByNameGET(@QueryParam("name") String name) {
-		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
-		ArrayList<Vuelo> vuelos = null;
-		try {
-			vuelos = master.buscarVideosPorName(name);
-		} catch (Exception e) {
-			ArrayList<String> temp = new ArrayList<String>();
-			temp.add(e.getMessage());
-			return Response.status(500).entity(temp).build();
-		}
-		return Response.status(200).entity(vuelos).build();
-	}
+	
 
 	// POST SERVICES:
 

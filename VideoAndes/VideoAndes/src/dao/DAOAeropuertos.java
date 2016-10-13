@@ -109,7 +109,7 @@ public class DAOAeropuertos {
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM VIDEOS WHERE IATA ='" + iata + "'";
+			String sql = "SELECT * FROM AEROPUERTOS WHERE IATA ='" + iata + "'";
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 

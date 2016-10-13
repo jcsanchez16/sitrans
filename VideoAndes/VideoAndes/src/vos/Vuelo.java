@@ -65,6 +65,7 @@ public class Vuelo
 		this.distancia = distancias;
 		this.duracion = duracion;
 	}
+	
 
 
 	public boolean isRealizado() {
