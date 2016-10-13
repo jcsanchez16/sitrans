@@ -83,7 +83,7 @@ public class DAOAviones {
 			ResultSet rs = prepStmt.executeQuery();
 			while (rs.next()) {
 				int nserie = Integer.parseInt(rs.getString("NSERIE"));
-				Aerolinea aerolinea = aerolineas.buscarAerolineasPK(rs.getString("AEROLINEA"));
+				String aerolinea = aerolineas.buscarAerolineasPK(rs.getString("AEROLINEA")).getCodigo();
 				String marca = rs.getString("MARCA");
 				int modelo = Integer.parseInt(rs.getString("MODELO"));
 				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
@@ -132,7 +132,7 @@ public class DAOAviones {
 
 			while (rs.next()) {
 				int nserie = Integer.parseInt(rs.getString("NSERIE"));
-				Aerolinea aerolinea = aerolineas.buscarAerolineasPK(rs.getString("AEROLINEA"));
+				String aerolinea = aerolineas.buscarAerolineasPK(rs.getString("AEROLINEA")).getCodigo();
 				String marca = rs.getString("MARCA");
 				int modelo = Integer.parseInt(rs.getString("MODELO"));
 				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));

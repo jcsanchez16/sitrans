@@ -12,6 +12,9 @@ import sun.applet.Main;
  */
 public class Vuelo
 {
+	
+	public final static boolean PASAJEROS = true;
+	public final static boolean CARGA = false;
 	//Identificador del vuelo
 	private int codigo;
 	
@@ -41,6 +44,8 @@ public class Vuelo
 	
 	private String duracion;
 	
+	private boolean tipo;
+	
 	
 	/**
 	 * Metodo constructor de un vuelo
@@ -52,7 +57,7 @@ public class Vuelo
 	 * @param asalida
 	 * @param allegada
 	 */
-	public Vuelo(int codigo, int frecuencia, Date llegada, Date salida, Avion avion, Aeropuerto asalida, Aeropuerto allegada, Aerolinea aero, int f, int distancias, String duracion){
+	public Vuelo(int codigo, int frecuencia, Date llegada, Date salida, Avion avion, Aeropuerto asalida, Aeropuerto allegada, Aerolinea aero, int f, int distancias, String duracion,int tipo){
 		this.codigo = codigo;
 		this.frecuencia = frecuencia;
 		this.fechaLlegada = llegada;
@@ -64,8 +69,21 @@ public class Vuelo
 		realizado = f==1? true : false;
 		this.distancia = distancias;
 		this.duracion = duracion;
+		this.tipo =tipo==0? true:false;
 	}
 	
+
+
+	public boolean isTipo() {
+		return tipo;
+	}
+
+
+
+	public void setTipo(boolean tipo) {
+		this.tipo = tipo;
+	}
+
 
 
 	public boolean isRealizado() {

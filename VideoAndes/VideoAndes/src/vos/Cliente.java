@@ -23,8 +23,6 @@ public class Cliente
 	
 	private String tipoIdentificacion;
 	
-	private ArrayList<VueloPasajeros> vuelos;
-	
 	/**
 	 * Clase constructora del cliente
 	 * @param id
@@ -39,14 +37,6 @@ public class Cliente
 		this.nacionalidad = nacionalidad;
 		this.correo = correo;
 		this.tipoIdentificacion=tipoIdentificacion;
-		vuelos = new ArrayList<VueloPasajeros>();
-	}
-	public void agregarVuelo(VueloPasajeros v)
-	{
-		vuelos.add(v);
-	}
-	public ArrayList<VueloPasajeros> getVuelos() {
-		return vuelos;
 	}
 
 	public int getIdentificacion() {

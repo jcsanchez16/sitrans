@@ -49,21 +49,7 @@ public class VuelosServices {
 		}
 		return Response.status(200).entity(vuelos).build();
 	}
-	@GET
-	@Path("/Aerolineas")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response GetAerolineas() {
-		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
-		ArrayList<Aerolinea> a = null;
-		try {
-			a = master.darAerolineas();
-		} catch (Exception e) {
-			ArrayList<String> temp = new ArrayList<String>();
-			temp.add(e.getMessage());
-			return Response.status(500).entity(temp).build();
-		}
-		return Response.status(200).entity(a).build();
-	}
+	
 	@GET
 	@Path("/Aeropuertos")
 	@Produces({ MediaType.APPLICATION_JSON })

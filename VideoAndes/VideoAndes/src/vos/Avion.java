@@ -11,6 +11,8 @@ import sun.applet.Main;
  */
 public class Avion
 {
+	public final static boolean PASAJEROS = true;
+	public final static boolean CARGA = false;
 	//Identificador del avion
 	private int nSerie;
 	
@@ -22,9 +24,11 @@ public class Avion
 	
 	private String marca;
 	
-	private Aerolinea aerolinea;
+	private String aerolinea;
 	
 	private ArrayList<Vuelo> vuelos;
+	
+	private boolean tipo;
 	
 	/**
 	 * Metodo constructor del avion
@@ -32,15 +36,24 @@ public class Avion
 	 * @param carga
 	 * @param capacidad
 	 */
-	public Avion(int nSerie, int modelo, int anhoFabricacion, String marca, Aerolinea aero){
+	public Avion(int nSerie, int modelo, int anhoFabricacion, String marca, String aero, int tipo){
 		this.anhoFabricacion = anhoFabricacion;
 		this.marca = marca;
 		this.nSerie = nSerie;
 		this.modelo = modelo;
 		this.aerolinea = aero;
 		vuelos= new ArrayList<Vuelo>();
+		this.tipo =tipo==0? true:false;
 	}
 	
+	public boolean isTipo() {
+		return tipo;
+	}
+
+	public void setTipo(boolean tipo) {
+		this.tipo = tipo;
+	}
+
 	public void agregarVuelo(Vuelo v)
 	{
 		vuelos.add(v);

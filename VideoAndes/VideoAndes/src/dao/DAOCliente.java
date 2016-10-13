@@ -14,6 +14,7 @@ import java.util.Properties;
 import vos.Aerolinea;
 import vos.Avion;
 import vos.Cliente;
+import vos.Pasajero;
 import vos.Remitente;
 import vos.Vuelo;
 import javafx.scene.control.TreeTableRow;
@@ -91,7 +92,10 @@ public class DAOCliente {
 					clientes.add(new Remitente(identificacion, nombre, nacionalidad, correo, tip, densidad));
 				}
 				else
-				clientes.add(new Cliente(identificacion, nombre, nacionalidad, correo, tip));
+				{
+					int eco = Integer.parseInt(rs.getString("ECONOMICO"));
+					clientes.add(new Pasajero(identificacion, nombre, nacionalidad, correo, tip, eco));
+				}
 			}
 
 		} catch (SQLException e) {

@@ -14,7 +14,11 @@ import dao.DAOVuelos;
 import vos.Aerolinea;
 import vos.Aeropuerto;
 import vos.Avion;
+import vos.AvionCarga;
+import vos.AvionPasajeros;
 import vos.Cliente;
+import vos.Pasajero;
+import vos.Remitente;
 import vos.Vuelo;
 
 
@@ -63,6 +67,98 @@ public class VuelAndesMaster {
 		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
 		return daoVuelos.darVuelosPorPK(codigo, fecha, aerolinea);
 	}
+	public String asignarAeronave(int idAvion, int idVuelo, String aerolinea, String fecha) throws Exception
+	{
+		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
+		daoAviones = daoAviones == null ? new DAOAviones(connectionDataPath) : daoAviones;
+		daoReservas = daoReservas== null ? new DAOReserva(connectionDataPath) : daoReservas;
+		Avion avion = daoAviones.buscarAvionPK(idAvion);
+		ArrayList<Cliente> clientes = daoReservas.buscarReservaporvuelo(idVuelo, aerolinea, fecha);
+		Vuelo vuelo = daoVuelos.darVuelosPorPK(idVuelo, fecha, aerolinea);
+		if(vuelo.isTipo()==Vuelo.PASAJEROS)
+		{
+			int ejecu = 0;
+			int eco= 0 ;
+			for (int i = 0; i < clientes.size(); i++) 
+			{
+			Pasajero este = (Pasajero)clientes.get(i);
+				if(este.isEconomica()==Pasajero.ECONOMICO)
+					eco++;
+				else
+					ejecu++;
+			}
+			if(avion.isTipo() == Avion.PASAJEROS)
+			{
+				if(((AvionPasajeros)avion).getAsientosEconomica() < eco || ((AvionPasajeros)avion).getAsientosEjecutivo() < ejecu)
+				{
+					return "El avion no tiene la capacidad necesaria";
+				}
+			}
+			else return "El avion no es del tipo necesario";
+				
+			daoVuelos.asignarAvion(idVuelo, fecha, aerolinea, idAvion);
+		}
+		else 
+		{
+			float carga;
+			for (int i = 0; i < clientes.size(); i++) 
+			{
+				carga +=((Remitente)clientes.get(i)).getDensidadCarga();
+			}
+			if(avion.isTipo() == Avion.CARGA)
+			{
+				if(((AvionCarga)avion).getCapacidadDensidad() < carga )
+				{
+					return "El avion no tiene la capacidad necesaria";
+				}
+			}
+			else return "El avion no es del tipo necesario";
+				
+			daoVuelos.asignarAvion(idVuelo, fecha, aerolinea, idAvion);
+		}
+
+	}
+	
+	public String registrarViajero(int idVuelo, String aerolinea, String fecha, String tipoIdentificacion, String id) throws Exception
+	{
+		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
+		daoAviones = daoAviones == null ? new DAOAviones(connectionDataPath) : daoAviones;
+		daoReservas = daoReservas== null ? new DAOReserva(connectionDataPath) : daoReservas;
+		Avion avion = daoAviones.buscarAvionPK(idAvion);
+		ArrayList<Cliente> clientes = daoReservas.buscarReservaporvuelo(idVuelo, aerolinea, fecha);
+		Vuelo vuelo = daoVuelos.darVuelosPorPK(idVuelo, fecha, aerolinea);
+		if(vuelo.isTipo()==Vuelo.PASAJEROS)
+		{
+			int ejecu = 0;
+			int eco= 0 ;
+			for (int i = 0; i < clientes.size(); i++) 
+			{
+			Pasajero este = (Pasajero)clientes.get(i);
+				if(este.isEconomica()==Pasajero.ECONOMICO)
+					eco++;
+				else
+					ejecu++;
+			}
+			if(avion.isTipo() == Avion.PASAJEROS)
+			{
+				if(((AvionPasajeros)avion).getAsientosEconomica() < eco || ((AvionPasajeros)avion).getAsientosEjecutivo() < ejecu)
+				{
+					return "El avion no tiene la capacidad necesaria";
+				}
+			}
+			else return "El avion no es del tipo necesario";
+				
+			daoVuelos.asignarAvion(idVuelo, fecha, aerolinea, idAvion);
+		}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public ArrayList<Aerolinea> darAerolineas() throws Exception {
 		daoAerolineas = daoAerolineas == null ? new DAOAerolineas(connectionDataPath) : daoAerolineas;
 		return daoAerolineas.darAerolineas();
@@ -72,6 +168,13 @@ public class VuelAndesMaster {
 		daoAerolineas = daoAerolineas == null ? new DAOAerolineas(connectionDataPath) : daoAerolineas;
 		return daoAerolineas.buscarAerolineasPK(c);
 	}
+	
+	
+	
+	
+	
+	
+	
 	public ArrayList<Aeropuerto> darAerpuertos() throws Exception {
 		daoAeropuertos = daoAeropuertos == null ? new DAOAeropuertos(connectionDataPath) : daoAeropuertos;
 		return daoAeropuertos.darAeropuertos();
@@ -81,6 +184,13 @@ public class VuelAndesMaster {
 		daoAeropuertos = daoAeropuertos == null ? new DAOAeropuertos(connectionDataPath) : daoAeropuertos;
 		return daoAeropuertos.buscarAeropuertoPK(c);
 	}
+	
+	
+	
+	
+	
+	
+	
 	public ArrayList<Avion> darAviones() throws Exception {
 		daoAviones = daoAviones == null ? new DAOAviones(connectionDataPath) : daoAviones;
 		return daoAviones.darAviones();
@@ -90,6 +200,13 @@ public class VuelAndesMaster {
 		daoAviones = daoAviones == null ? new DAOAviones(connectionDataPath) : daoAviones;
 		return daoAviones.buscarAvionPK(c);
 	}
+
+
+
+
+
+
+
 	public ArrayList<Cliente> darCLientes() throws Exception {
 		daoClientes = daoClientes == null ? new DAOCliente(connectionDataPath) : daoClientes;
 		return daoClientes.darClientes();

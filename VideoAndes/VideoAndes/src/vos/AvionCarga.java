@@ -3,7 +3,7 @@ package vos;
 public class AvionCarga extends Avion
 {
 	private float capacidadDensidad;
-	public AvionCarga(int nSerie, int modelo, int anhoFabricacion, String marca, float capacidad, Aerolinea aerolinea) 
+	public AvionCarga(int nSerie, int modelo, int anhoFabricacion, String marca, float capacidad, String aerolinea) 
 	{
 		super(nSerie, modelo, anhoFabricacion, marca, aerolinea);
 		capacidadDensidad = capacidad;
