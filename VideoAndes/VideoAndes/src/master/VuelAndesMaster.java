@@ -3,6 +3,8 @@ package master;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Properties;
 
 import dao.DAOAerolineas;
@@ -119,37 +121,61 @@ public class VuelAndesMaster {
 
 	}
 	
-	public String registrarViajero(int idVuelo, String aerolinea, String fecha, String tipoIdentificacion, String id) throws Exception
+	public String registrarViajero(int idVuelo, String aerolinea, String fecha, String tipoIdentificacion, int id, int asEje, int asEco) throws Exception
 	{
+		Date hoy = new Date();
+		if(java.sql.Date.valueOf(fecha).before( hoy))
+			return "El vuelo ya sucedio";
 		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
 		daoAviones = daoAviones == null ? new DAOAviones(connectionDataPath) : daoAviones;
 		daoReservas = daoReservas== null ? new DAOReserva(connectionDataPath) : daoReservas;
-		Avion avion = daoAviones.buscarAvionPK(idAvion);
-		ArrayList<Cliente> clientes = daoReservas.buscarReservaporvuelo(idVuelo, aerolinea, fecha);
 		Vuelo vuelo = daoVuelos.darVuelosPorPK(idVuelo, fecha, aerolinea);
+		Avion avion = daoAviones.buscarAvionPK(vuelo.getAvion());
+		ArrayList<Cliente> clientes = daoReservas.buscarReservaporvuelo(idVuelo, aerolinea, fecha);
 		if(vuelo.isTipo()==Vuelo.PASAJEROS)
 		{
 			int ejecu = 0;
 			int eco= 0 ;
 			for (int i = 0; i < clientes.size(); i++) 
 			{
-			Pasajero este = (Pasajero)clientes.get(i);
+				Pasajero este = (Pasajero)clientes.get(i);
 				if(este.isEconomica()==Pasajero.ECONOMICO)
 					eco++;
 				else
 					ejecu++;
 			}
-			if(avion.isTipo() == Avion.PASAJEROS)
-			{
-				if(((AvionPasajeros)avion).getAsientosEconomica() < eco || ((AvionPasajeros)avion).getAsientosEjecutivo() < ejecu)
-				{
-					return "El avion no tiene la capacidad necesaria";
-				}
-			}
-			else return "El avion no es del tipo necesario";
-				
-			daoVuelos.asignarAvion(idVuelo, fecha, aerolinea, idAvion);
-		}
+			eco = ((AvionPasajeros)avion).getAsientosEconomica()-eco;
+			ejecu = ((AvionPasajeros)avion).getAsientosEjecutivo() - ejecu;
+
+			if(  eco < asEco ||   ejecu< asEje)
+				return "El avion no tiene la capacidad necesaria";			}
+			else 
+			daoReservas.registrarPasajero(idVuelo, fecha, aerolinea, tipoIdentificacion, id);
+	}
+	
+	public String registrarViajero(int idVuelo, String aerolinea, String fecha, String tipoIdentificacion, int id, float carga) throws Exception
+	{
+		Date hoy = new Date();
+		if(java.sql.Date.valueOf(fecha).before( hoy))
+			return "El vuelo ya sucedio";
+		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
+		daoAviones = daoAviones == null ? new DAOAviones(connectionDataPath) : daoAviones;
+		daoReservas = daoReservas== null ? new DAOReserva(connectionDataPath) : daoReservas;
+		Vuelo vuelo = daoVuelos.darVuelosPorPK(idVuelo, fecha, aerolinea);
+		Avion avion = daoAviones.buscarAvionPK(vuelo.getAvion());
+		ArrayList<Cliente> clientes = daoReservas.buscarReservaporvuelo(idVuelo, aerolinea, fecha);
+		if(vuelo.isTipo()==Vuelo.CARGA)
+		{
+			float car = 0;
+			for (int i = 0; i < clientes.size(); i++) 
+				carga +=((Remitente)clientes.get(i)).getDensidadCarga();
+			car = ((AvionCarga)avion).getCapacidadDensidad()-car;
+
+			if(  car< carga)
+				return "El avion no tiene la capacidad necesaria";			}
+			else 
+			daoReservas.registrarPasajero(idVuelo, fecha, aerolinea, tipoIdentificacion, id);
+	}
 	
 	
 	

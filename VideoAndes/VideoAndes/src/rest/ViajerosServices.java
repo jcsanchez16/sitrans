@@ -1,12 +1,13 @@
+import javax.servlet.ServletContext;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import fachada.Master;
-import vos.Reserva;
+import master.VuelAndesMaster;
 
 public class ViajerosServices 
 {
@@ -21,13 +22,17 @@ public class ViajerosServices
 	@Path("{idViajero: \\d+}/{idVuelo: \\d+}/{sillasEconomicas: \\d+}/{sillasEjecutivas: \\d+}")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response RF8AsignarReseva(@PathParam("idViajero") int idViajero, @PathParam("idVuelo") int idVuelo,@PathParam("sillasEconomicas") int sillasEconomicas
-			,@PathParam("sillasEjecutivas") int sillasEjecutivas) 
+			,@PathParam("sillasEjecutivas") int sillasEjecutivas, String aerolinea, String fecha, String tipoIdentificacion) 
 	{
-		int reserva = null;
+		int reserva = 0;
 		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
 		try 
 		{
+<<<<<<< HEAD
 			 reserva = fachada.registrarViajero(idViajero,idVuelo,sillasEconomicas,sillasEjecutivas);
+=======
+			 reserva = fachada.registrarViajero(idVuelo, aerolinea, fecha, tipoIdentificacion, idViajero, sillasEjecutivas, sillasEconomicas);
+>>>>>>> 7a93b80c074fa6c2235909abd3a0450f8ee54af3
 			 System.out.println(reserva);
 		} 
 		catch (Exception e) 
