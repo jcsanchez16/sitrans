@@ -27,7 +27,7 @@ public class ViajerosServices
 		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
 		try 
 		{
-			 reserva = fachada.AsignarReserva(idViajero,idVuelo,sillasEconomicas,sillasEjecutivas);
+			 reserva = fachada.registrarViajero(idViajero,idVuelo,sillasEconomicas,sillasEjecutivas);
 			 System.out.println(reserva);
 		} 
 		catch (Exception e) 
