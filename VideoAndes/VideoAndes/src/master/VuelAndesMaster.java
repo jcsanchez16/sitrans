@@ -121,7 +121,7 @@ public class VuelAndesMaster {
 
 	}
 	
-	public String registrarViajero(int idVuelo, String aerolinea, String fecha, String tipoIdentificacion, String id, int asEje, int asEco) throws Exception
+	public String registrarViajero(int idVuelo, String aerolinea, String fecha, String tipoIdentificacion, int id, int asEje, int asEco) throws Exception
 	{
 		Date hoy = new Date();
 		if(java.sql.Date.valueOf(fecha).before( hoy))
