@@ -28,12 +28,9 @@ public class ViajerosServices
 		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
 		try 
 		{
-<<<<<<< HEAD
 			 reserva = fachada.registrarViajero(idViajero,idVuelo,sillasEconomicas,sillasEjecutivas);
-=======
 			 reserva = fachada.registrarViajero(idVuelo, aerolinea, fecha, tipoIdentificacion, idViajero, sillasEjecutivas, sillasEconomicas);
->>>>>>> 7a93b80c074fa6c2235909abd3a0450f8ee54af3
-			 System.out.println(reserva);
+			System.out.println(reserva);
 		} 
 		catch (Exception e) 
 		{

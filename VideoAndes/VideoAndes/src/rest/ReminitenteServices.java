@@ -7,6 +7,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import master.VuelAndesMaster;
 import fachada.Master;
 import vos.Reserva;
 
@@ -24,13 +25,13 @@ public class ReminitenteServices
 	@POST
 	@Path("{idRemitente: \\d+}/{idVuelo: \\d+}/{peso: \\d+}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response RF9AsignarReseva(@PathParam("idRemitente") int idRemitente, @PathParam("idVuelo") int idVuelo,@PathParam("peso") int peso) 
+	public Response RF9AsignarReseva(@PathParam("idRemitente") int idRemitente, @PathParam("idVuelo") int idVuelo,@PathParam("peso") int peso, String tipoIdentificacion, String fecha, String aerolinea) 
 	{
 		int reserva = 0;
 		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
 		try 
 		{
-			 reserva = fachada.AsignarReservaPaquete(idRemitente,idVuelo,peso);
+			 reserva = fachada.registrarCarga(idVuelo, aerolinea, fecha, tipoIdentificacion, idRemitente, peso);
 			 System.out.println(reserva);
 		} 
 		catch (Exception e) 

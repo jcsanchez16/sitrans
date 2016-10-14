@@ -153,7 +153,7 @@ public class VuelAndesMaster {
 			daoReservas.registrarPasajero(idVuelo, fecha, aerolinea, tipoIdentificacion, id);
 	}
 	
-	public String registrarViajero(int idVuelo, String aerolinea, String fecha, String tipoIdentificacion, int id, float carga) throws Exception
+	public String registrarCarga(int idVuelo, String aerolinea, String fecha, String tipoIdentificacion, int id, float carga) throws Exception
 	{
 		Date hoy = new Date();
 		if(java.sql.Date.valueOf(fecha).before( hoy))
