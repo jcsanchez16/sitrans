@@ -10,10 +10,10 @@ public class VueloCarga extends Vuelo{
 	private ArrayList<Remitente> clientes;
 	
 	public VueloCarga(int codigo, int frecuencia, Date llegada,
-			Date salida, Avion avion, Aeropuerto asalida, Aeropuerto allegada,
-			Aerolinea aero, float precio,int f,int distancias, String duracion) 
+			Date salida, int avion, String asalida, String allegada,
+			String aero, float precio,int f,int distancias, String duracion) 
 	{
-		super(codigo, frecuencia, llegada, salida, avion, asalida, allegada, aero, f,distancias,duracion);
+		super(codigo, frecuencia, llegada, salida, avion, asalida, allegada, aero, f,distancias,duracion,1);
 		precioPorDensidad = precio;
 		clientes = new ArrayList<Remitente>();
 	}

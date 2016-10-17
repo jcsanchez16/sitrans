@@ -28,15 +28,15 @@ public class Vuelo
 	private Date fechaLlegada;
 	
 	//Aeropuerto de salida
-	private Aeropuerto salida;
+	private String salida;
 	
 	//Aeropuerto de llegada
-	private Aeropuerto llegada;
+	private String llegada;
 	
 	//Avion asociado al vuelo
-	private Avion avion;
+	private int avion;
 	
-	private Aerolinea aerolinea;
+	private String aerolinea;
 	
 	private boolean realizado;
 	
@@ -57,7 +57,7 @@ public class Vuelo
 	 * @param asalida
 	 * @param allegada
 	 */
-	public Vuelo(int codigo, int frecuencia, Date llegada, Date salida, Avion avion, Aeropuerto asalida, Aeropuerto allegada, Aerolinea aero, int f, int distancias, String duracion,int tipo){
+	public Vuelo(int codigo, int frecuencia, Date llegada, Date salida, int avion, String asalida, String allegada, String aero, int f, int distancias, String duracion,int tipo){
 		this.codigo = codigo;
 		this.frecuencia = frecuencia;
 		this.fechaLlegada = llegada;
@@ -156,42 +156,42 @@ public class Vuelo
 	}
 
 
-	public Aeropuerto getSalida() {
+	public String getSalida() {
 		return salida;
 	}
 
 
-	public void setSalida(Aeropuerto salida) {
+	public void setSalida(String salida) {
 		this.salida = salida;
 	}
 
 
-	public Aeropuerto getLlegada() {
+	public String getLlegada() {
 		return llegada;
 	}
 
 
-	public void setLlegada(Aeropuerto llegada) {
+	public void setLlegada(String llegada) {
 		this.llegada = llegada;
 	}
 
 
-	public Avion getAvion() {
+	public int getAvion() {
 		return avion;
 	}
 
 
-	public void setAvion(Avion avion) {
+	public void setAvion(int avion) {
 		this.avion = avion;
 	}
 
 
-	public Aerolinea getAerolinea() {
+	public String getAerolinea() {
 		return aerolinea;
 	}
 
 
-	public void setAerolinea(Aerolinea aerolinea) {
+	public void setAerolinea(String aerolinea) {
 		this.aerolinea = aerolinea;
 	}
 	

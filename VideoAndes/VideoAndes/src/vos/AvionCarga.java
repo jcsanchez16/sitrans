@@ -5,7 +5,7 @@ public class AvionCarga extends Avion
 	private float capacidadDensidad;
 	public AvionCarga(int nSerie, int modelo, int anhoFabricacion, String marca, float capacidad, String aerolinea) 
 	{
-		super(nSerie, modelo, anhoFabricacion, marca, aerolinea);
+		super(nSerie, modelo, anhoFabricacion, marca, aerolinea,1);
 		capacidadDensidad = capacidad;
 	}
 	public float getCapacidadDensidad() {

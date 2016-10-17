@@ -10,7 +10,7 @@ public class AvionPasajeros extends Avion
 	
 	public AvionPasajeros(int nSerie, int modelo, int anhoFabricacion, String marca, int asientosEconomica,int asientosEjecutivo, String aerolinea) 
 	{
-		super(nSerie, modelo, anhoFabricacion, marca, aerolinea);
+		super(nSerie, modelo, anhoFabricacion, marca, aerolinea,0);
 		this.asientosEconomica = asientosEconomica;
 		this.asientosEjecutivo = asientosEjecutivo;
 	}

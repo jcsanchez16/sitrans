@@ -59,13 +59,13 @@ public class Avion
 		vuelos.add(v);
 	}
 	
-	public Aerolinea getAerolinea() {
+	public String getAerolinea() {
 		return aerolinea;
 	}
 
 
 
-	public void setAerolinea(Aerolinea aerolinea) {
+	public void setAerolinea(String aerolinea) {
 		this.aerolinea = aerolinea;
 	}
 
