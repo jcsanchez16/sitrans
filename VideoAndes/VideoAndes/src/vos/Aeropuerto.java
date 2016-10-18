@@ -31,16 +31,17 @@ public class Aeropuerto
 	 * @param nombre
 	 * @param impuestos
 	 */
-	public Aeropuerto(String ciudad, String nombre, String IATA)
-	{
+	
+	
+	public Aeropuerto(String ciudad, String nombre, String IATA,ArrayList<Vuelo> vuele, ArrayList<Vuelo> vuels) {
 		this.nombre = nombre;
 		this.ciudad = ciudad;
 		this.IATA = IATA;
-		vuelosSalida = new ArrayList<Vuelo>();
-		vuelosLlegada = new ArrayList<Vuelo>();
+		vuelosSalida = vuels==null? new ArrayList<Vuelo>():vuels;
+		vuelosLlegada = vuele==null? new ArrayList<Vuelo>():vuele;
 	}
-	
-	
+
+
 	public void agregarVueloSalida(Vuelo v)
 	{
 		vuelosSalida.add(v);
@@ -112,7 +113,7 @@ public class Aeropuerto
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Aeropuerto aeropuerto = new Aeropuerto("bogota", "el dorado", "BOG");
+		Aeropuerto aeropuerto = new Aeropuerto("bogota", "el dorado", "BOG",null,null);
 		System.out.println(aeropuerto.getIATA()+"------"+aeropuerto.getCiudad());
 		System.out.println(aeropuerto.getNombre());
 	}

@@ -11,13 +11,13 @@ public class VueloCarga extends Vuelo{
 	
 	public VueloCarga(int codigo, int frecuencia, Date llegada,
 			Date salida, int avion, String asalida, String allegada,
-			String aero, float precio,int f,int distancias, String duracion) 
+			String aero, float precio,int f,int distancias, String duracion, ArrayList clie) 
 	{
 		super(codigo, frecuencia, llegada, salida, avion, asalida, allegada, aero, f,distancias,duracion,1);
 		precioPorDensidad = precio;
-		clientes = new ArrayList<Remitente>();
+		clientes = clie==null?new ArrayList<Remitente>():clie;
 	}
-	
+
 	public void agregarCliente (Remitente c)
 	{
 		clientes.add(c);

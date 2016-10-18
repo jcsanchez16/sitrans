@@ -9,29 +9,19 @@ public class VueloPasajeros extends Vuelo{
 	
 	private float precioEconomico;
 
-	private ArrayList<Cliente> clientes;
+	private ArrayList<Pasajero> clientes;
 	
 	public VueloPasajeros(int codigo, int frecuencia, Date llegada,
 			Date salida, int avion, String asalida, String allegada,
-			String aero, float precioE, float precioEc,int f,int distancias, String duracion) 
+			String aero, float precioE, float precioEc,int f,int distancias, String duracion, ArrayList client) 
 	{
 		super(codigo, frecuencia, llegada, salida, avion, asalida, allegada, aero,f,distancias, duracion,0);
 		precioEconomico = precioEc;
 		precioEjecutivo = precioE;
-		clientes = new ArrayList<Cliente>();
+		clientes = client==null?new ArrayList<Remitente>():client;
 	}
 	
-	public VueloPasajeros(int codigo, int frecuencia, Date llegada,
-			Date salida, int avion, String asalida, String allegada,
-			String aero, float precioE, float precioEc,int f,int distancias, String duracion, ArrayList<Cliente> client) 
-	{
-		super(codigo, frecuencia, llegada, salida, avion, asalida, allegada, aero,f,distancias, duracion,0);
-		precioEconomico = precioEc;
-		precioEjecutivo = precioE;
-		clientes = client;
-	}
-	
-	public void agregarCliente (Cliente c)
+	public void agregarCliente (Pasajero c)
 	{
 		clientes.add(c);
 	}
@@ -44,7 +34,7 @@ public class VueloPasajeros extends Vuelo{
 		this.precioEjecutivo = precioEjecutivo;
 	}
 
-	public void setClientes(ArrayList<Cliente> clientes) {
+	public void setClientes(ArrayList<Pasajero> clientes) {
 		this.clientes = clientes;
 	}
 
@@ -56,7 +46,7 @@ public class VueloPasajeros extends Vuelo{
 		this.precioEconomico = precioEconomico;
 	}
 
-	public ArrayList<Cliente> getClientes() {
+	public ArrayList<Pasajero> getClientes() {
 		return clientes;
 	}
 

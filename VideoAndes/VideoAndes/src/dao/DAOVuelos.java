@@ -33,20 +33,12 @@ public class DAOVuelos {
 	
 	private ArrayList<Vuelo> vuelos;
 	
-	private DAOAviones aviones;
-	
-	private DAOAerolineas aerolineas;
-	
-	private DAOAeropuertos aeropuerto;
-	
 	private DAOReserva reservas;
 
 	public DAOVuelos(String conectionData) {
 		initConnectionData(conectionData);
 		vuelos = new ArrayList<Vuelo>();
-		aviones = new DAOAviones(conectionData);
-		aerolineas = new DAOAerolineas(conectionData);
-		aeropuerto = new DAOAeropuertos(conectionData);
+		reservas = new DAOReserva(conectionData);
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -84,7 +76,7 @@ public class DAOVuelos {
 
 	public ArrayList<Vuelo> darVuelos() throws Exception {
 		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> vuelos = new ArrayList<Vuelo>();
+		 vuelos = new ArrayList<Vuelo>();
 
 		try {
 			establecerConexion();
@@ -97,26 +89,24 @@ public class DAOVuelos {
 				String Salida = rs.getString("AEROPUERTO_SALIDA");
 				String Llegada = rs.getString("AEROPUERTO_LLEGADA");
 				Date fSalida = Date.valueOf(rs.getString("FECHA_SALIDA"));
-				String g = rs.getString("FECHA_SALIDA");
 				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
 				int avion = Integer.parseInt(rs.getString("AVION"));
-				Avion avi = aviones.buscarAvionPK(avion);
 				String aerolinea =rs.getString("AEROLINEA");
-				Aerolinea aero = aerolineas.buscarAerolineasPK(aerolinea);
 				String duracion = rs.getString("DURACION");
 				int distancia = Integer.parseInt(rs.getString("DISTANCIA"));
 				int realizado = Integer.parseInt(rs.getString("REALIZADO"));
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
 					Float carga = Float.parseFloat(rs.getString("PRECIO_DENSIDAD"));
-					vuelos.add(new VueloCarga(codigo, frecuencia, fLlegada, fSalida, avi, aeropuerto.buscarAeropuertoPK(Salida), aeropuerto.buscarAeropuertoPK(Llegada),aero, carga,realizado, distancia, duracion));
+					ArrayList clie =reservas.buscarReservaporvuelo(codigo, aerolinea);
+					vuelos.add(new VueloCarga(codigo, frecuencia, fLlegada, fSalida, avion, Salida, Llegada,aerolinea, carga,realizado, distancia, duracion,clie));
 				}
 				else
 				{
 					Float ej = Float.parseFloat(rs.getString("PRECIO_EJECUTIVO"));
 					Float ec = Float.parseFloat(rs.getString("PRECIO_ECONOMICO"));
-					ArrayList<Cliente> clie =reservas.buscarReservaporvuelo(codigo, aerolinea,g);
-					vuelos.add(new VueloPasajeros(codigo, frecuencia, fLlegada, fSalida, avi, aeropuerto.buscarAeropuertoPK(Salida), aeropuerto.buscarAeropuertoPK(Llegada),aero, ej, ec,realizado, distancia, duracion,clie));
+					ArrayList clie =reservas.buscarReservaporvuelo(codigo, aerolinea);
+					vuelos.add(new VueloPasajeros(codigo, frecuencia, fLlegada, fSalida, avion, Salida, Llegada,aerolinea, ej, ec,realizado, distancia, duracion,clie));
 					
 				}
 			}
@@ -141,39 +131,95 @@ public class DAOVuelos {
 		return vuelos;
 	}
 	
-	public Vuelo darVuelosPorPK(int codigo, String fecha, String aerolinea) throws Exception {
+	public Vuelo darVuelosPorPK(int codigo,String aerolinea) throws Exception {
 		PreparedStatement prepStmt = null;
 		Vuelo vuelos =null;
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM VUELOS WHERE CODIGO='"+codigo+"' and FECHA_SALIDA='"+fecha+"' and AEROLINEA ='"+aerolinea+"' ";
+			String sql = "SELECT * FROM VUELOS WHERE CODIGO='"+codigo+"' and AEROLINEA ='"+aerolinea+"' ";
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 			while (rs.next()) {
 				int frecuencia = Integer.parseInt(rs.getString("FRECUENCIA_SEMANAL"));
 				String Salida = rs.getString("AEROPUERTO_SALIDA");
-				String Llegada = rs.getString("AEROPUERTO_LLEGADA");
-				Date fSalida = Date.valueOf(fecha);
+				String Llegada = rs.getString("AEROPUERTO_LLEGADA");				
+				Date fSalida = Date.valueOf(rs.getString("FECHA_SALIDA"));
 				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
 				int avion = Integer.parseInt(rs.getString("AVION"));
-				Avion avi = aviones.buscarAvionPK(avion);
-				Aerolinea aero = aerolineas.buscarAerolineasPK(aerolinea);
 				String duracion = rs.getString("DURACION");
 				int distancia = Integer.parseInt(rs.getString("DISTANCIA"));
 				int realizado = Integer.parseInt(rs.getString("REALIZADO"));
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
 					Float carga = Float.parseFloat(rs.getString("PRECIO_DENSIDAD"));
-					vuelos=(new VueloCarga(codigo, frecuencia, fLlegada, fSalida, avi, aeropuerto.buscarAeropuertoPK(Salida), aeropuerto.buscarAeropuertoPK(Llegada),aero, carga,realizado, distancia, duracion));
+					vuelos=(new VueloCarga(codigo, frecuencia, fLlegada, fSalida, avion,Salida, Llegada,aerolinea, carga,realizado, distancia, duracion,null));
 				}
 				else
 				{
 					Float ej = Float.parseFloat(rs.getString("PRECIO_EJECUTIVO"));
 					Float ec = Float.parseFloat(rs.getString("PRECIO_ECONOMICO"));
-					vuelos=(new VueloPasajeros(codigo, frecuencia, fLlegada, fSalida, avi, aeropuerto.buscarAeropuertoPK(Salida), aeropuerto.buscarAeropuertoPK(Llegada),aero, ej, ec,realizado, distancia, duracion));
+					vuelos=(new VueloPasajeros(codigo, frecuencia, fLlegada, fSalida, avion,Salida, Llegada,aerolinea, ej, ec,realizado, distancia, duracion,null));
 				}
 					
+			}
+
+		} catch (SQLException e) {
+			System.err.println("SQLException in executing:");
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (prepStmt != null) {
+				try {
+					prepStmt.close();
+				} catch (SQLException exception) {
+					System.err.println("SQLException in closing Stmt:");
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			if (this.conexion != null)
+				closeConnection(this.conexion);
+		}
+		return vuelos;
+	}
+	
+
+	public ArrayList<Vuelo> buscarVuelosPorCriterio(String cri, String data) throws Exception{
+		PreparedStatement prepStmt = null;
+		 vuelos = new ArrayList<Vuelo>();
+
+		try {
+			establecerConexion();
+			String sql = "SELECT * FROM VUELOS WHERE "+cri+" ='"+data+"' ";
+			prepStmt = conexion.prepareStatement(sql);
+			ResultSet rs = prepStmt.executeQuery();
+			while (rs.next()) {
+				int codigo = Integer.parseInt(rs.getString("CODIGO"));
+				int frecuencia = Integer.parseInt(rs.getString("FRECUENCIA_SEMANAL"));
+				String Salida = rs.getString("AEROPUERTO_SALIDA");
+				String Llegada = rs.getString("AEROPUERTO_LLEGADA");
+				Date fSalida = Date.valueOf(rs.getString("FECHA_SALIDA"));
+				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
+				int avion = Integer.parseInt(rs.getString("AVION"));
+				String aerolinea =rs.getString("AEROLINEA");
+				String duracion = rs.getString("DURACION");
+				int distancia = Integer.parseInt(rs.getString("DISTANCIA"));
+				int realizado = Integer.parseInt(rs.getString("REALIZADO"));
+				if(Integer.parseInt(rs.getString("TIPO"))==1)
+				{
+					Float carga = Float.parseFloat(rs.getString("PRECIO_DENSIDAD"));
+					ArrayList clie =reservas.buscarReservaporvuelo(codigo, aerolinea);
+					vuelos.add(new VueloCarga(codigo, frecuencia, fLlegada, fSalida, avion, Salida, Llegada,aerolinea, carga,realizado, distancia, duracion,clie));
+				}
+				else
+				{
+					Float ej = Float.parseFloat(rs.getString("PRECIO_EJECUTIVO"));
+					Float ec = Float.parseFloat(rs.getString("PRECIO_ECONOMICO"));
+					ArrayList clie =reservas.buscarReservaporvuelo(codigo, aerolinea);
+					vuelos.add(new VueloPasajeros(codigo, frecuencia, fLlegada, fSalida, avion, Salida, Llegada,aerolinea, ej, ec,realizado, distancia, duracion,clie));
+					
+				}
 			}
 
 		} catch (SQLException e) {
@@ -254,5 +300,6 @@ public class DAOVuelos {
 
 				
 	}
+
 
 }

@@ -32,10 +32,13 @@ public class DAOCliente {
 	private String driver;
 	
 	private ArrayList<Cliente> clientes;
+	
+	private DAOReserva reservas;
 
 	public DAOCliente(String conectionData) {
 		initConnectionData(conectionData);
 		clientes = new ArrayList<Cliente>();
+		reservas = new DAOReserva(conectionData);
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -86,15 +89,16 @@ public class DAOCliente {
 				String nacionalidad = rs.getString("NACIONALIDAD");
 				String correo = rs.getString("CORREO");
 				String tip = rs.getString("TIPO_IDENTIFICACION");
+				ArrayList<String> vuelos = reservas.buscarReservaPorCliente(identificacion, tip);
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
 					float densidad =Float.parseFloat(rs.getString("DENSIDAD_CARGA"));
-					clientes.add(new Remitente(identificacion, nombre, nacionalidad, correo, tip, densidad));
+					clientes.add(new Remitente(identificacion, nombre, nacionalidad, correo, tip, densidad,vuelos));
 				}
 				else
 				{
 					int eco = Integer.parseInt(rs.getString("ECONOMICO"));
-					clientes.add(new Pasajero(identificacion, nombre, nacionalidad, correo, tip, eco));
+					clientes.add(new Pasajero(identificacion, nombre, nacionalidad, correo, tip, eco,vuelos));
 				}
 			}
 
@@ -124,7 +128,7 @@ public class DAOCliente {
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM VIDEOS WHERE IDENTIFICACION ='" + id + "' and TIPO_IDENTIFICACION ='"+tip+"'";
+			String sql = "SELECT * FROM CLIENTES WHERE IDENTIFICACION ='" + id + "' and TIPO_IDENTIFICACION ='"+tip+"'";
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 
@@ -132,13 +136,17 @@ public class DAOCliente {
 				String nombre= rs.getString("NOMBRE");
 				String nacionalidad = rs.getString("NACIONALIDAD");
 				String correo = rs.getString("CORREO");
+				ArrayList<String> vuelos = reservas.buscarReservaPorCliente(id, tip);
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
 					float densidad =Float.parseFloat(rs.getString("DENSIDAD_CARGA"));
-					cliente=(new Remitente(id, nombre, nacionalidad, correo, tip, densidad));
+					cliente=(new Remitente(id, nombre, nacionalidad, correo, tip, densidad,vuelos));
 				}
 				else
-				cliente=(new Cliente(id, nombre, nacionalidad, correo, tip));
+				{
+					int tipo = Integer.parseInt(rs.getString("ECONOMICO"));
+					cliente=(new Pasajero(id, nombre, nacionalidad, correo, tip,tipo,vuelos));					
+				}
 			}
 			
 

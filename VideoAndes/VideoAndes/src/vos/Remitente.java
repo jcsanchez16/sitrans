@@ -8,16 +8,16 @@ public class Remitente extends Cliente
 {
 	private float densidadCarga;
 	
-	private  ArrayList<VueloCarga> vuelosC;
+	private  ArrayList<String> vuelosC;
 	
-	public Remitente(int id, String nombre, String nacionalidad, String correo, String tipoIdentificacion, float densidadCarga) 
+	public Remitente(int id, String nombre, String nacionalidad, String correo, String tipoIdentificacion, float densidadCarga , ArrayList<String> vuelos) 
 	{
 		super(id, nombre, nacionalidad, correo, tipoIdentificacion);
 		this.densidadCarga =densidadCarga;
-		vuelosC = new ArrayList<>();
+		vuelosC =vuelos==null? new ArrayList<String>():vuelos;
 	}
 	
-	public void agregarVuelo(VueloCarga v)
+	public void agregarVuelo(String v)
 	{
 		vuelosC.add(v);
 	}
@@ -26,7 +26,7 @@ public class Remitente extends Cliente
 		return densidadCarga;
 	}
 
-	public ArrayList<VueloCarga> getVuelosC() {
+	public ArrayList<String> getVuelosC() {
 		return vuelosC;
 	}
 

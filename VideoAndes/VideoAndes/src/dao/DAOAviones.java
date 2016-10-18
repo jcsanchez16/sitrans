@@ -31,12 +31,13 @@ public class DAOAviones {
 	private String driver;
 	
 	private ArrayList<Avion> aviones;
-	private DAOAerolineas aerolineas;
+	
+	private DAOVuelos vuelos;
 
 	public DAOAviones(String conectionData) {
 		initConnectionData(conectionData);
 		aviones = new ArrayList<Avion>();
-		aerolineas = new DAOAerolineas(conectionData);
+		vuelos = new DAOVuelos(conectionData);
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -83,20 +84,21 @@ public class DAOAviones {
 			ResultSet rs = prepStmt.executeQuery();
 			while (rs.next()) {
 				int nserie = Integer.parseInt(rs.getString("NSERIE"));
-				String aerolinea = aerolineas.buscarAerolineasPK(rs.getString("AEROLINEA")).getCodigo();
+				String aerolinea = rs.getString("AEROLINEA");
 				String marca = rs.getString("MARCA");
 				int modelo = Integer.parseInt(rs.getString("MODELO"));
 				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
+				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio("AVION",""+nserie);
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
 					float carga = Float.parseFloat(rs.getString("CAPACIDAD_DENSIDAD"));
-					aviones.add(new AvionCarga(nserie, modelo, ano, marca, carga, aerolinea));
+					aviones.add(new AvionCarga(nserie, modelo, ano, marca, carga, aerolinea,vuel));
 				}
 				else
 				{
 					int asientosEjecutivo= Integer.parseInt(rs.getString("ASIENTOS_EJECUTIVO"));
 					int asientosEconomica= Integer.parseInt(rs.getString("ASIENTOS_ECONOMICA"));
-					aviones.add(new AvionPasajeros(nserie, modelo, ano, marca, asientosEconomica, asientosEjecutivo, aerolinea));
+					aviones.add(new AvionPasajeros(nserie, modelo, ano, marca, asientosEconomica, asientosEjecutivo, aerolinea,vuel));
 				}
 			}
 
@@ -131,21 +133,70 @@ public class DAOAviones {
 			ResultSet rs = prepStmt.executeQuery();
 
 			while (rs.next()) {
-				int nserie = Integer.parseInt(rs.getString("NSERIE"));
-				String aerolinea = aerolineas.buscarAerolineasPK(rs.getString("AEROLINEA")).getCodigo();
+				String aerolinea = rs.getString("AEROLINEA");
 				String marca = rs.getString("MARCA");
 				int modelo = Integer.parseInt(rs.getString("MODELO"));
 				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
+				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio("AVION",""+serie);
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
 					float carga = Float.parseFloat(rs.getString("CAPACIDAD_DENSIDAD"));
-					aviones=(new AvionCarga(nserie, modelo, ano, marca, carga, aerolinea));
+					aviones=(new AvionCarga(serie, modelo, ano, marca, carga, aerolinea,vuel));
 				}
 				else
 				{
 					int asientosEjecutivo= Integer.parseInt(rs.getString("ASIENTOS_EJECUTIVO"));
 					int asientosEconomica= Integer.parseInt(rs.getString("ASIENTOS_ECONOMICA"));
-					aviones=(new AvionPasajeros(nserie, modelo, ano, marca, asientosEconomica, asientosEjecutivo, aerolinea));
+					aviones=(new AvionPasajeros(serie, modelo, ano, marca, asientosEconomica, asientosEjecutivo, aerolinea,vuel));
+				}
+			}
+
+		} catch (SQLException e) {
+			System.err.println("SQLException in executing:");
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (prepStmt != null) {
+				try {
+					prepStmt.close();
+				} catch (SQLException exception) {
+					System.err.println("SQLException in closing Stmt:");
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			if (this.conexion != null)
+				closeConnection(this.conexion);
+		}
+		return aviones;
+	}
+
+	public ArrayList<Avion> buscarAvionesPorAero(String oACI) throws Exception{
+		PreparedStatement prepStmt = null;
+		ArrayList<Avion> aviones = new ArrayList<Avion>();
+
+		try {
+			establecerConexion();
+			String sql = "SELECT * FROM AVIONES WHERE AEROLINEA='"+ oACI+"'"; 
+			prepStmt = conexion.prepareStatement(sql);
+			ResultSet rs = prepStmt.executeQuery();
+
+			while (rs.next()) {
+				int nserie = Integer.parseInt(rs.getString("NSERIE"));
+				String marca = rs.getString("MARCA");
+				int modelo = Integer.parseInt(rs.getString("MODELO"));
+				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
+				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio("AVION",""+nserie);
+				if(Integer.parseInt(rs.getString("TIPO"))==1)
+				{
+					float carga = Float.parseFloat(rs.getString("CAPACIDAD_DENSIDAD"));
+					aviones.add(new AvionCarga(nserie, modelo, ano, marca, carga, oACI,vuel));
+				}
+				else
+				{
+					int asientosEjecutivo= Integer.parseInt(rs.getString("ASIENTOS_EJECUTIVO"));
+					int asientosEconomica= Integer.parseInt(rs.getString("ASIENTOS_ECONOMICA"));
+					aviones.add(new AvionPasajeros(nserie, modelo, ano, marca, asientosEconomica, asientosEjecutivo, oACI,vuel));
 				}
 			}
 

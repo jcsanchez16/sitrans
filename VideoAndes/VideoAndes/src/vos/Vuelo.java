@@ -195,4 +195,9 @@ public class Vuelo
 		this.aerolinea = aerolinea;
 	}
 	
+	public String toString()
+	{
+		return aerolinea+codigo ;
+	}
+	
 }

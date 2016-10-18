@@ -29,18 +29,18 @@ public class Aerolinea
 	 * Clase constructora de la aerolinea
 	 * @param id
 	 * @param nombre
-	 */
-	public Aerolinea(String paizRadicacion, String nombre, String OACI, String codigo)
+	 */	
+	public Aerolinea(String paizRadicacion, String nombre, String OACI, String codigo, ArrayList<Avion> avi,ArrayList<Vuelo> vuel) 
 	{
 		this.nombre = nombre;
 		this.paizRadicacion = paizRadicacion;
 		this.OACI = OACI;		
 		this.codigo = codigo;
-		vuelos = new ArrayList<Vuelo>();
-		aviones = new ArrayList<Avion>();
+		vuelos = vuel==null? new ArrayList<Vuelo>():vuel;
+		aviones = avi==null? new ArrayList<Avion>():avi;
 	}
-	
-	
+
+
 	public void agregarVuelo(Vuelo v)
 	{
 		vuelos.add(v);
@@ -134,7 +134,7 @@ public class Aerolinea
 
 	public static void main(String[] args)
 	{
-		Aerolinea aero = new Aerolinea("Colombia", "Panamerican", "BOG", "PA");
+		Aerolinea aero = new Aerolinea("Colombia", "Panamerican", "BOG", "PA",null,null);
 		System.out.println(aero.getOACI()+"----"+aero.getNombre()+"----"+aero.getPaizRadicacion());
 	}
 	

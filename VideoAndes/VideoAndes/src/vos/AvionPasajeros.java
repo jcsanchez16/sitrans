@@ -1,5 +1,7 @@
 package vos;
 
+import java.util.ArrayList;
+
 import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
 public class AvionPasajeros extends Avion
@@ -8,9 +10,9 @@ public class AvionPasajeros extends Avion
 	
 	private int asientosEjecutivo;
 	
-	public AvionPasajeros(int nSerie, int modelo, int anhoFabricacion, String marca, int asientosEconomica,int asientosEjecutivo, String aerolinea) 
+	public AvionPasajeros(int nSerie, int modelo, int anhoFabricacion, String marca, int asientosEconomica,int asientosEjecutivo, String aerolinea,ArrayList<Vuelo> vuel) 
 	{
-		super(nSerie, modelo, anhoFabricacion, marca, aerolinea,0);
+		super(nSerie, modelo, anhoFabricacion, marca, aerolinea,0, vuel);
 		this.asientosEconomica = asientosEconomica;
 		this.asientosEjecutivo = asientosEjecutivo;
 	}

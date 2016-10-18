@@ -48,11 +48,12 @@ public class AerolineaServices
 		ArrayList<Avion> aeronaves = null;
 		try 
 		{
-			fachada.asignarAeronave(idAeronave,idVuelo);
+			fachada.asignarAeronave(idAeronave,idVuelo, null, null);
 		} 
 		catch (Exception e) 
 		{
 			return Response.status(500).entity(aeronaves).build();
 		}
 		return Response.status(200).entity(aeronaves).build();
+	}
 	}

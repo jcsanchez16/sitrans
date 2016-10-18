@@ -13,6 +13,7 @@ import java.util.Properties;
 
 import vos.Cliente;
 import vos.Vuelo;
+import vos.Vuelo;
 import javafx.scene.control.TreeTableRow;
 
 public class DAOReserva {
@@ -27,14 +28,15 @@ public class DAOReserva {
 
 	private String driver;
 	
-	private ArrayList<Vuelo> vuelos;
+	private DAOVuelos vuelos;
 	
 	private DAOCliente cliente;
+	
+	private String conectionData;
 
-	public DAOReserva(String conectionData) {
-		initConnectionData(conectionData);
-		vuelos = new ArrayList<Vuelo>();
-		cliente = new DAOCliente(conectionData);
+	public DAOReserva(String conectionDat) {
+		initConnectionData(conectionDat);
+		conectionData = conectionDat;
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -70,93 +72,16 @@ public class DAOReserva {
 		}
 	}
 
-	public ArrayList darReservas() throws Exception {
-		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> vuelos = new ArrayList<Vuelo>();
-
-		try {
-			establecerConexion();
-			String sql = "SELECT * FROM VUELOS";
-			prepStmt = conexion.prepareStatement(sql);
-			ResultSet rs = prepStmt.executeQuery();
-			while (rs.next()) {
-				int codigo = Integer.parseInt(rs.getString("CODIGO"));
-				int frecuencia = Integer.parseInt(rs.getString("FRECUENCIA_SEMANAL"));
-				int Salida = Integer.parseInt(rs.getString("AEROPUERTO_SALIDA"));
-				int Llegada = Integer.parseInt(rs.getString("AEROPUERTO_LLEGADA"));
-				Date fSalida = Date.valueOf(rs.getString("FECHA_SALIDA"));
-				Date fLlegada = Date.valueOf(rs.getString("FECHA_LLEGADA"));
-				String duracion = rs.getString("DURACION");
-				int distancia = Integer.parseInt(rs.getString("DISTANCIA"));
-				vuelos.add(new Vuelo(id, precio, fLlegada, fSalida, null, null, null));
-			}
-
-		} catch (SQLException e) {
-			System.err.println("SQLException in executing:");
-			e.printStackTrace();
-			throw e;
-		} finally {
-			if (prepStmt != null) {
-				try {
-					prepStmt.close();
-				} catch (SQLException exception) {
-					System.err.println("SQLException in closing Stmt:");
-					exception.printStackTrace();
-					throw exception;
-				}
-			}
-			if (this.conexion != null)
-				closeConnection(this.conexion);
-		}
-		return vuelos;
-	}
-
-	public ArrayList darVideosConError() throws Exception {
-		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> videos = new ArrayList<Vuelo>();
-
-		try {
-			establecerConexion();
-			String sql = "SELECT * FROM VIDEOSSS"; // intencionalmente se
-													// escribe mal VIDEOS para
-													// que lance error.
-			prepStmt = conexion.prepareStatement(sql);
-			ResultSet rs = prepStmt.executeQuery();
-
-			while (rs.next()) {
-				String name = rs.getString("NAME");
-				int id = Integer.parseInt(rs.getString("ID"));
-				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, costo, llegada, salida, avion, asalida, allegada));
-			}
-
-		} catch (SQLException e) {
-			System.err.println("SQLException in executing:");
-			e.printStackTrace();
-			throw e;
-		} finally {
-			if (prepStmt != null) {
-				try {
-					prepStmt.close();
-				} catch (SQLException exception) {
-					System.err.println("SQLException in closing Stmt:");
-					exception.printStackTrace();
-					throw exception;
-				}
-			}
-			if (this.conexion != null)
-				closeConnection(this.conexion);
-		}
-		return videos;
-	}
-
-	public ArrayList<Cliente> buscarReservaporvuelo(int vuelo, String aerolinea, String Fecha) throws Exception {
+	
+	public ArrayList buscarReservaporvuelo(int vuelo, String aerolinea) throws Exception {
+		
 		PreparedStatement prepStmt = null;
 		ArrayList<Cliente> c = new ArrayList<Cliente>();
+		cliente = new DAOCliente(conectionData);
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM RESERVAS WHERE ID_VUELO ='" + vuelo + "' and FECHA_VUELO ='" + Fecha + "' and AEROLINEA ='" + aerolinea + "'";
+			String sql = "SELECT * FROM RESERVAS WHERE ID_VUELO ='" + vuelo + "' and AEROLINEA ='" + aerolinea + "'";
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 
@@ -185,22 +110,22 @@ public class DAOReserva {
 		}
 		return c;
 	}
-
-	public ArrayList<Vuelo> buscarVideosPorNameYId(String name, int id) throws Exception {
+	public ArrayList<String> buscarReservaPorCliente(int identificacion,String tip) throws Exception 
+	{
 		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> videos = new ArrayList<Vuelo>();
+		ArrayList<String> v = new ArrayList<String>();
+		vuelos = new DAOVuelos(conectionData);
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM VIDEOS WHERE NAME ='" + name + "' and ID = " + id;
+			String sql = "SELECT * FROM RESERVAS WHERE ID_CLIENTE ='" + identificacion + "' and TIPO_IDENTIFICACION ='" + tip + "'";
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 
 			while (rs.next()) {
-				String name2 = rs.getString("NAME");
-				int id2 = Integer.parseInt(rs.getString("ID"));
-				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, name, duration));
+				String aero = rs.getString("AEROLINEA");
+				int id = Integer.parseInt(rs.getString("ID_VUELO"));
+				v.add(vuelos.darVuelosPorPK(id, aero).toString());
 			}
 
 		} catch (SQLException e) {
@@ -220,8 +145,7 @@ public class DAOReserva {
 			if (this.conexion != null)
 				closeConnection(this.conexion);
 		}
-		return videos;
+		return v;
 	}
-	
-	
+
 }

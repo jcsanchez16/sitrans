@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import vos.Aerolinea;
+import vos.Avion;
 import vos.Vuelo;
 import javafx.scene.control.TreeTableRow;
 
@@ -27,11 +28,16 @@ public class DAOAerolineas {
 
 	private String driver;
 	
-	private ArrayList<Aerolinea> Aerolineas;
+	private ArrayList<Aerolinea> aerolineas;
+	
+	private DAOAviones aviones;
+	private DAOVuelos vuelos;
 
 	public DAOAerolineas(String conectionData) {
 		initConnectionData(conectionData);
-		Aerolineas = new ArrayList<Aerolinea>();
+		aerolineas = new ArrayList<Aerolinea>();
+		aviones = new DAOAviones(conectionData);
+		vuelos = new DAOVuelos(conectionData);
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -82,7 +88,9 @@ public class DAOAerolineas {
 				String pais = rs.getString("PAIS_RADICACION");
 				String nombre = rs.getString("NOMBRE");
 				String codigo = rs.getString("CODIGO");
-				aerolineas.add(new Aerolinea(pais, nombre, OACI, codigo));
+				ArrayList<Avion> avi= aviones.buscarAvionesPorAero(OACI);
+				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio("AEROLINEA",OACI);
+				aerolineas.add(new Aerolinea(pais, nombre, OACI, codigo, avi,vuel));
 			}
 
 		} catch (SQLException e) {
@@ -120,7 +128,9 @@ public class DAOAerolineas {
 				String pais = rs.getString("PAIS_RADICACION");
 				String nombre = rs.getString("NOMBRE");
 				String codigo = rs.getString("CODIGO");
-				aerolineas=(new Aerolinea(pais, nombre, OACI, codigo));
+				ArrayList<Avion> avi= aviones.buscarAvionesPorAero(OACI);
+				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio("AEROLINEA",OACI);
+				aerolineas=(new Aerolinea(pais, nombre, OACI, codigo, avi,vuel));
 			}
 
 		} catch (SQLException e) {

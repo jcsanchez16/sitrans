@@ -28,10 +28,13 @@ public class DAOAeropuertos {
 	private String driver;
 	
 	private ArrayList<Aeropuerto> aeropuertos;
+	
+	private DAOVuelos vuelos;
 
 	public DAOAeropuertos(String conectionData) {
 		initConnectionData(conectionData);
 		aeropuertos = new ArrayList<Aeropuerto>();
+		vuelos = new DAOVuelos(conectionData);
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -80,7 +83,9 @@ public class DAOAeropuertos {
 				String ciudad = rs.getString("CIUDAD");
 				String iata = rs.getString("IATA");
 				String nombre = rs.getString("NOMBRE");
-				aeropuertos.add(new Aeropuerto(ciudad, nombre, iata));
+				ArrayList<Vuelo> vuels = vuelos.buscarVuelosPorCriterio("AEROPUERTO_SALIDA",iata);
+				ArrayList<Vuelo> vuele = vuelos.buscarVuelosPorCriterio("AEROPUERTO_LLEGADA",iata);
+				aeropuertos.add(new Aeropuerto(ciudad, nombre, iata,vuele,vuels));
 			}
 
 		} catch (SQLException e) {
@@ -116,7 +121,9 @@ public class DAOAeropuertos {
 			while (rs.next()) {
 				String ciudad = rs.getString("CIUDAD");
 				String nombre = rs.getString("NOMBRE");
-				aeropuertos =(new Aeropuerto(ciudad, nombre, iata));
+				ArrayList<Vuelo> vuels = vuelos.buscarVuelosPorCriterio("AEROPUERTO_SALIDA",iata);
+				ArrayList<Vuelo> vuele = vuelos.buscarVuelosPorCriterio("AEROPUERTO_LLEGADA",iata);
+				aeropuertos=(new Aeropuerto(ciudad, nombre, iata,vuele,vuels));
 			}
 
 		} catch (SQLException e) {

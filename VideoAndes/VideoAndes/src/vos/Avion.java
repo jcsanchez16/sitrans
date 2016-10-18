@@ -36,13 +36,13 @@ public class Avion
 	 * @param carga
 	 * @param capacidad
 	 */
-	public Avion(int nSerie, int modelo, int anhoFabricacion, String marca, String aero, int tipo){
+	public Avion(int nSerie, int modelo, int anhoFabricacion, String marca, String aero, int tipo,ArrayList<Vuelo> vuel){
 		this.anhoFabricacion = anhoFabricacion;
 		this.marca = marca;
 		this.nSerie = nSerie;
 		this.modelo = modelo;
 		this.aerolinea = aero;
-		vuelos= new ArrayList<Vuelo>();
+		vuelos= vuel==null?new ArrayList<Vuelo>():vuel;
 		this.tipo =tipo==0? true:false;
 	}
 	
