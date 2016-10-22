@@ -3,11 +3,13 @@ package rest;
 import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -39,5 +41,21 @@ public class AeropuertoServices
 			return Response.status(500).entity(temp).build();
 		}
 		return Response.status(200).entity(a).build();
+	}
+	
+	@DELETE
+	@Path("CancelarVuelo")
+	public void RF13CancelarReservaViajeroVuelo(@QueryParam("idViajero") int idViajero, @QueryParam("idReserva") int idReserva)
+	{
+		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
+		try
+		{
+			fachada.cancelarVuelo(idViajero,idReserva);
+		}
+		catch (Exception e) 
+		{
+			System.out.println("no se pudo cancelar la reserva");
+		}
+		System.out.println("Se cancelo la reserva");
 	}
 }

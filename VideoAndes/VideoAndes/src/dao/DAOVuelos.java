@@ -185,13 +185,17 @@ public class DAOVuelos {
 	}
 	
 
-	public ArrayList<Vuelo> buscarVuelosPorCriterio(String cri, String data) throws Exception{
+	public ArrayList<Vuelo> buscarVuelosPorCriterio(ArrayList<String> cri, ArrayList<String> data) throws Exception{
 		PreparedStatement prepStmt = null;
 		 vuelos = new ArrayList<Vuelo>();
 
 		try {
 			establecerConexion();
-			String sql = "SELECT * FROM VUELOS WHERE "+cri+" ='"+data+"' ";
+			String sql = "SELECT * FROM VUELOS WHERE "+cri.get(0)+" ='"+data.get(0)+"' ";
+			for (int i = 1; i < cri.size(); i++) 
+			{
+				sql +=" AND "+cri.get(i)+" ='"+data.get(i)+"' ";
+			}
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
 			while (rs.next()) {

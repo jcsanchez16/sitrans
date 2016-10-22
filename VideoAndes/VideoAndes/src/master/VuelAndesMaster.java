@@ -148,7 +148,8 @@ public class VuelAndesMaster {
 			ejecu = ((AvionPasajeros)avion).getAsientosEjecutivo() - ejecu;
 
 			if(  eco < asEco ||   ejecu< asEje)
-				return "El avion no tiene la capacidad necesaria";			}
+				return "El avion no tiene la capacidad necesaria";			
+		}
 			else 
 			daoReservas.registrarPasajero(idVuelo, aerolinea, tipoIdentificacion, id);
 	}
@@ -177,6 +178,86 @@ public class VuelAndesMaster {
 			daoReservas.registrarPasajero(idVuelo, aerolinea, tipoIdentificacion, id);
 	}
 	
+	public String registrarReserva2(String tipoId,int idViajero, String idAeroLlegada,String idAeroSalida, boolean economica, String fecha1) throws Exception 
+	{
+		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
+		daoAviones = daoAviones == null ? new DAOAviones(connectionDataPath) : daoAviones;
+		daoReservas = daoReservas== null ? new DAOReserva(connectionDataPath) : daoReservas;	
+		ArrayList<String> cri =new ArrayList<>();
+		cri.add("AEROPUERTO_SALIDA");
+		cri.add("FECHA_SALIDA");
+		cri.add("TIPO");
+		ArrayList<String> data =new ArrayList<>();
+		data.add(""+idAeroSalida);
+		data.add(fecha1);
+		data.add(""+0);
+		ArrayList<String> respuesta = null;
+		ArrayList<Vuelo> vuelos = daoVuelos.buscarVuelosPorCriterio(cri, data);
+		Vuelo v = llegaA(vuelos, idAeroLlegada);
+		if(v!=null )
+		{
+			Avion avion = daoAviones.buscarAvionPK(v.getAvion());
+			ArrayList<Cliente> clientes = daoReservas.buscarReservaporvuelo(v.getCodigo(), v.getAerolinea());
+			int ejecu = 0;
+			int eco= 0 ;
+			for (int i = 0; i < clientes.size(); i++) 
+			{
+				Pasajero este = (Pasajero)clientes.get(i);
+				if(este.isEconomica()==Pasajero.ECONOMICO)
+					eco++;
+				else
+					ejecu++;
+			}
+			eco = ((AvionPasajeros)avion).getAsientosEconomica()-eco;
+			ejecu = ((AvionPasajeros)avion).getAsientosEjecutivo() - ejecu;
+
+			if((economica && eco>=1)||(!economica && ejecu>=1))		
+				return v.getAerolinea()+v.getCodigo()+","+tipoId+idViajero;			
+		}
+		for (int i = 0; i < vuelos.size(); i++) 
+		{	
+			Vuelo vuel =vuelos.get(i);
+			Avion avion = daoAviones.buscarAvionPK(vuel.getAvion());
+			ArrayList<Cliente> clientes = daoReservas.buscarReservaporvuelo(vuel.getCodigo(), vuel.getAerolinea());
+			int ejecu = 0;
+			int eco= 0 ;
+			for (int j = 0; j < clientes.size(); j++) 
+			{
+				Pasajero este = (Pasajero)clientes.get(j);
+				if(este.isEconomica()==Pasajero.ECONOMICO)
+					eco++;
+				else
+					ejecu++;
+			}
+			eco = ((AvionPasajeros)avion).getAsientosEconomica()-eco;
+			ejecu = ((AvionPasajeros)avion).getAsientosEjecutivo() - ejecu;
+
+			if((economica && eco>=1)||(!economica && ejecu>=1))		
+				respuesta.add( vuel.getAerolinea()+vuel.getCodigo()+","+tipoId+idViajero+"/"+registrarReserva2(tipoId,idViajero, vuel.getLlegada(), idAeroSalida, economica, vuel.getFechaLlegada().toString()));
+		}
+		String mejor = null;
+		int mejo = 10000000;
+		for (int i = 0; i < respuesta.size(); i++) 
+		{
+			if(respuesta.get(i).split("/").length<mejo)
+			{
+				mejo =respuesta.get(i).split("/").length;
+				mejor =respuesta.get(i);			
+			}
+		}
+		return mejor;
+	}
+		
+	public Vuelo llegaA(ArrayList<Vuelo>vuelos, String llegada)
+	{
+		boolean encontrado = false;
+		for (int i = 0; i < vuelos.size() && !encontrado; i++) 
+		{
+			if(vuelos.get(i).getLlegada().equals(llegada))
+			return vuelos.get(i);
+		}
+		return null;
+	}
 	
 	
 	

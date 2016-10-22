@@ -41,10 +41,10 @@ public class AerolineaServices
 	}
 	
 	@POST
-	@Path("{idAeronave: \\d+}/{codigo: [a-zA-Z][a-zA-Z]\\d+}")
+	@Path("{idAeronave: \\d+}/{codigo:[A-Z]{3}[0-9]{3}}")
 	public Response RF7asignarAeronave(@PathParam("idAeronave") int idAeronave, @PathParam("codigo") String vuelo) 
 	{
-		int idVuelo =  Integer.parseInt(vuelo.substring(3, 4));
+		int idVuelo =  Integer.parseInt(vuelo.substring(3,5));
 		String aero = vuelo.substring(0, 2);
 		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
 		ArrayList<Avion> aeronaves = null;
