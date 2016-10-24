@@ -88,7 +88,11 @@ public class DAOAviones {
 				String marca = rs.getString("MARCA");
 				int modelo = Integer.parseInt(rs.getString("MODELO"));
 				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
-				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio("AVION",""+nserie);
+				ArrayList<String> cri =new ArrayList<>();
+				ArrayList<String> data =new ArrayList<>();
+				cri.add("AVION");
+				data.add(nserie+"");
+				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio(cri,data);
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
 					float carga = Float.parseFloat(rs.getString("CAPACIDAD_DENSIDAD"));
@@ -137,7 +141,11 @@ public class DAOAviones {
 				String marca = rs.getString("MARCA");
 				int modelo = Integer.parseInt(rs.getString("MODELO"));
 				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
-				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio("AVION",""+serie);
+				ArrayList<String> cri =new ArrayList<>();
+				ArrayList<String> data =new ArrayList<>();
+				cri.add("AVION");
+				data.add(serie+"");
+				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio(cri,data);
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
 					float carga = Float.parseFloat(rs.getString("CAPACIDAD_DENSIDAD"));
@@ -186,7 +194,11 @@ public class DAOAviones {
 				String marca = rs.getString("MARCA");
 				int modelo = Integer.parseInt(rs.getString("MODELO"));
 				int ano = Integer.parseInt(rs.getString("AÑO_FABRICACION"));
-				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio("AVION",""+nserie);
+				ArrayList<String> cri =new ArrayList<>();
+				ArrayList<String> data =new ArrayList<>();
+				cri.add("AVION");
+				data.add(nserie+"");
+				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio(cri,data);
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
 					float carga = Float.parseFloat(rs.getString("CAPACIDAD_DENSIDAD"));

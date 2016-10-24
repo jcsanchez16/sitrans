@@ -89,7 +89,11 @@ public class DAOAerolineas {
 				String nombre = rs.getString("NOMBRE");
 				String codigo = rs.getString("CODIGO");
 				ArrayList<Avion> avi= aviones.buscarAvionesPorAero(OACI);
-				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio("AEROLINEA",OACI);
+				ArrayList<String> cri =new ArrayList<>();
+				ArrayList<String> data =new ArrayList<>();
+				cri.add("AEROLINEA");
+				data.add(OACI);
+				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio(cri,data);
 				aerolineas.add(new Aerolinea(pais, nombre, OACI, codigo, avi,vuel));
 			}
 
@@ -129,7 +133,11 @@ public class DAOAerolineas {
 				String nombre = rs.getString("NOMBRE");
 				String codigo = rs.getString("CODIGO");
 				ArrayList<Avion> avi= aviones.buscarAvionesPorAero(OACI);
-				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio("AEROLINEA",OACI);
+				ArrayList<String> cri =new ArrayList<>();
+				ArrayList<String> data =new ArrayList<>();
+				cri.add("AEROLINEA");
+				data.add(OACI);
+				ArrayList<Vuelo> vuel = vuelos.buscarVuelosPorCriterio(cri,data);
 				aerolineas=(new Aerolinea(pais, nombre, OACI, codigo, avi,vuel));
 			}
 

@@ -125,7 +125,7 @@ public class DAOReserva {
 			while (rs.next()) {
 				String aero = rs.getString("AEROLINEA");
 				int id = Integer.parseInt(rs.getString("ID_VUELO"));
-				v.add(vuelos.darVuelosPorPK(id, aero).toString());
+				v.add(aero+";"+id);
 			}
 
 		} catch (SQLException e) {
@@ -146,6 +146,62 @@ public class DAOReserva {
 				closeConnection(this.conexion);
 		}
 		return v;
+	}
+
+	public void cancelarReserva(String aero, int idv, String tipo, int idc) throws SQLException 
+	{
+		PreparedStatement prepStmt = null;
+		try {
+			establecerConexion();
+			String sql = "DELETE FROM RESERVAS WHERE ID_VUELO = "+idv+" AND ID_CLIENTE = '"+idc+"' AND TIPO_IDENTIFICACION = '"+tipo+"' AND AEROLINEA = '"+aero+"'";
+			prepStmt = conexion.prepareStatement(sql);
+			prepStmt.execute();
+
+		} catch (SQLException e) {
+			System.err.println("SQLException in executing:");
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (prepStmt != null) {
+				try {
+					prepStmt.close();
+				} catch (SQLException exception) {
+					System.err.println("SQLException in closing Stmt:");
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			if (this.conexion != null)
+				closeConnection(this.conexion);
+		}
+	}
+
+	public void registrar(int idVuelo, String aerolinea,String tipoIdentificacion, int id) throws SQLException 
+	{
+		PreparedStatement prepStmt = null;
+		try {
+			establecerConexion();
+			String sql = "INSERT INTO RESERVAS(ID_VUELO, ID_CLIENTE, TIPO_IDENTIFICACION, AEROLINEA) VALUES ('"+idVuelo+"', '"+id+"', '"+tipoIdentificacion+"', '"+aerolinea+"')";
+			prepStmt = conexion.prepareStatement(sql);
+			prepStmt.execute();
+
+		} catch (SQLException e) {
+			System.err.println("SQLException in executing:");
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (prepStmt != null) {
+				try {
+					prepStmt.close();
+				} catch (SQLException exception) {
+					System.err.println("SQLException in closing Stmt:");
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			if (this.conexion != null)
+				closeConnection(this.conexion);
+		}
 	}
 
 }

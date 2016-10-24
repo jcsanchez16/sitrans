@@ -246,52 +246,31 @@ public class DAOVuelos {
 		return vuelos;
 	}
 
-
-	
-	
-	
-	//----------------------Requerimientos-------------------------//
-	
-	/**
-	 * Metodo para registrar un vuelo a la base de datos.
-	 * @param vuelo
-	 * @return
-	 * @throws SQLException
-	 * @throws Exception
-	 */
-	public Vuelo registrarVuelo(Vuelo vuelo) throws SQLException, Exception {
-		
+	public void asignarAvion(int idVuelo, String aerolinea, int idAvion) throws SQLException 
+	{
 		PreparedStatement prepStmt = null;
-		ArrayList<Vuelo> vuelos = new ArrayList<Vuelo>();
-
-		try {
+		try 
+		{
 			establecerConexion();
-			
-			String sql = "INSERT INTO ARRIBOS VALUES (";
-			//sql += vuelo.getId() + ",";
-			//sql += vuelo.getCosto() + ")";
-			
-			System.out.println("SQL stmt:" + sql);
-			
+			String sql = "UPDATE VUELOS SET AVION= '"+idAvion+"' WHERE CODIGO='"+idVuelo+"' and AEROLINEA ='"+aerolinea+"' ";
 			prepStmt = conexion.prepareStatement(sql);
-			ResultSet rs = prepStmt.executeQuery();
-
-			while (rs.next()) {
-//				String name2 = rs.se;
-//				int id2 = Integer.parseInt(rs.getString("ID"));
-//				int duration = Integer.parseInt(rs.getString("DURATION"));
-				//videos.add(new Vuelo(id, name, duration));
-			}
-
-		} catch (SQLException e) {
+			prepStmt.execute();
+		} 
+		catch (SQLException e) 
+		{
 			System.err.println("SQLException in executing:");
 			e.printStackTrace();
 			throw e;
-		} finally {
-			if (prepStmt != null) {
-				try {
+		} 
+		finally {
+			if (prepStmt != null) 
+			{
+				try 
+				{
 					prepStmt.close();
-				} catch (SQLException exception) {
+				} 
+				catch (SQLException exception) 
+				{
 					System.err.println("SQLException in closing Stmt:");
 					exception.printStackTrace();
 					throw exception;
@@ -300,9 +279,6 @@ public class DAOVuelos {
 			if (this.conexion != null)
 				closeConnection(this.conexion);
 		}
-		return vuelo;
-
-				
 	}
 
 

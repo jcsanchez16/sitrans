@@ -169,4 +169,75 @@ public class DAOCliente {
 		}
 		return cliente;
 	}
+
+	public void registrarCarga(String tipoIdentificacion, int id, float carga) throws SQLException 
+	{
+		PreparedStatement prepStmt = null;
+		try 
+		{
+			establecerConexion();
+			String sql = "UPDATE CLIENTES SET DENSIDAD_CARGA= '"+carga+"' WHERE IDENTIFICACION ='" + id + "' and TIPO_IDENTIFICACION ='"+tipoIdentificacion+"'";
+			prepStmt = conexion.prepareStatement(sql);
+			prepStmt.execute();
+		} 
+		catch (SQLException e) 
+		{
+			System.err.println("SQLException in executing:");
+			e.printStackTrace();
+			throw e;
+		} 
+		finally {
+			if (prepStmt != null) 
+			{
+				try 
+				{
+					prepStmt.close();
+				} 
+				catch (SQLException exception) 
+				{
+					System.err.println("SQLException in closing Stmt:");
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			if (this.conexion != null)
+				closeConnection(this.conexion);
+		}
+	}
+
+	public void registrarTipo(String tipoIdentificacion, int id,boolean tipoSilla) throws SQLException 
+	{
+		PreparedStatement prepStmt = null;
+		int tip = tipoSilla == false? 1:0;
+		try 
+		{
+			establecerConexion();
+			String sql = "UPDATE CLIENTES SET ECONOMICO= '"+tip+"' WHERE IDENTIFICACION ='" + id + "' and TIPO_IDENTIFICACION ='"+tipoIdentificacion+"'";
+			prepStmt = conexion.prepareStatement(sql);
+			prepStmt.execute();
+		} 
+		catch (SQLException e) 
+		{
+			System.err.println("SQLException in executing:");
+			e.printStackTrace();
+			throw e;
+		} 
+		finally {
+			if (prepStmt != null) 
+			{
+				try 
+				{
+					prepStmt.close();
+				} 
+				catch (SQLException exception) 
+				{
+					System.err.println("SQLException in closing Stmt:");
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			if (this.conexion != null)
+				closeConnection(this.conexion);
+		}
+	}
 }

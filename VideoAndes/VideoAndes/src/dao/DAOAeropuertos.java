@@ -83,8 +83,13 @@ public class DAOAeropuertos {
 				String ciudad = rs.getString("CIUDAD");
 				String iata = rs.getString("IATA");
 				String nombre = rs.getString("NOMBRE");
-				ArrayList<Vuelo> vuels = vuelos.buscarVuelosPorCriterio("AEROPUERTO_SALIDA",iata);
-				ArrayList<Vuelo> vuele = vuelos.buscarVuelosPorCriterio("AEROPUERTO_LLEGADA",iata);
+				ArrayList<String> cri =new ArrayList<>();
+				ArrayList<String> data =new ArrayList<>();
+				cri.add("AEROPUERTO_SALIDA");
+				data.add(iata);
+				ArrayList<Vuelo> vuels = vuelos.buscarVuelosPorCriterio(cri,data);
+				cri.add(0, "AEROPUERTO_LLEGADA");
+				ArrayList<Vuelo> vuele = vuelos.buscarVuelosPorCriterio(cri,data);
 				aeropuertos.add(new Aeropuerto(ciudad, nombre, iata,vuele,vuels));
 			}
 
@@ -121,8 +126,13 @@ public class DAOAeropuertos {
 			while (rs.next()) {
 				String ciudad = rs.getString("CIUDAD");
 				String nombre = rs.getString("NOMBRE");
-				ArrayList<Vuelo> vuels = vuelos.buscarVuelosPorCriterio("AEROPUERTO_SALIDA",iata);
-				ArrayList<Vuelo> vuele = vuelos.buscarVuelosPorCriterio("AEROPUERTO_LLEGADA",iata);
+				ArrayList<String> cri =new ArrayList<>();
+				ArrayList<String> data =new ArrayList<>();
+				cri.add("AEROPUERTO_SALIDA");
+				data.add(iata);
+				ArrayList<Vuelo> vuels = vuelos.buscarVuelosPorCriterio(cri,data);
+				cri.add(0, "AEROPUERTO_LLEGADA");
+				ArrayList<Vuelo> vuele = vuelos.buscarVuelosPorCriterio(cri,data);
 				aeropuertos=(new Aeropuerto(ciudad, nombre, iata,vuele,vuels));
 			}
 

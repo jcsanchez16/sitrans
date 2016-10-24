@@ -23,6 +23,9 @@ public class Cliente
 	
 	private String tipoIdentificacion;
 	
+
+	private  ArrayList<String> vuelos;
+	
 	/**
 	 * Clase constructora del cliente
 	 * @param id
@@ -30,15 +33,24 @@ public class Cliente
 	 * @param direccion
 	 * @param telefono
 	 */
-	public Cliente(int id, String nombre, String nacionalidad, String correo, String tipoIdentificacion)
+	public Cliente(int id, String nombre, String nacionalidad, String correo, String tipoIdentificacion, ArrayList<String> vuel)
 	{
 		this.identificacion = id;
 		this.nombre = nombre;
 		this.nacionalidad = nacionalidad;
 		this.correo = correo;
 		this.tipoIdentificacion=tipoIdentificacion;
+		this.vuelos = vuel;
 	}
-
+	
+	public void agregarVuelo(String v)
+	{
+		vuelos.add(v);
+	}
+	public ArrayList<String> getVuelos() {
+		return vuelos;
+	}
+	
 	public int getIdentificacion() {
 		return identificacion;
 	}
