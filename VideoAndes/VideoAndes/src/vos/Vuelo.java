@@ -95,7 +95,6 @@ public class Vuelo
 		this.realizado = realizado;
 	}
 
-
 	public int getDistancia() {
 		return distancia;
 	}

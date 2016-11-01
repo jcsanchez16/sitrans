@@ -1,6 +1,7 @@
 package rest;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.DELETE;
@@ -18,6 +19,9 @@ import master.VuelAndesMaster;
 import vos.Aerolinea;
 import vos.Aeropuerto;
 import vos.Avion;
+import vos.Cliente;
+import vos.Pasajero;
+import vos.Vuelo;
 @Path("aeropuerto")
 public class AeropuertoServices 
 {
@@ -45,17 +49,30 @@ public class AeropuertoServices
 	
 	@DELETE
 	@Path("CancelarVuelo")
-	public void RF13CancelarReservaViajeroVuelo(@QueryParam("idViajero") int idViajero, @QueryParam("idReserva") int idReserva)
+	public String RF15CancelarVuelo( @QueryParam("idVuelo") String idVuelo)
 	{
 		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
+		String resp = "se añadieron los viajes a :\n";
 		try
 		{
-			fachada.cancelarVuelo(idViajero,idReserva);
+			int vuel= Integer.parseInt(idVuelo.split(";")[1]);
+			String aerolinea = idVuelo.split(";")[0];
+			ArrayList<Cliente> clientes = fachada.darCLientesPorVuelo(idVuelo); 
+			for (int i = 0; i < clientes.size(); i++) 
+			{
+				Cliente s = clientes.get(i);
+				String[] vuelos = fachada.cancelado( idVuelo, s,new Date()).split("/");
+				for (int j = 0; j < vuelos.length; j++) 
+				{
+					resp+= s.getTipoIdentificacion()+";"+ s.getIdentificacion()+ "        " +fachada.registrar(vuel, aerolinea, s.getTipoIdentificacion(), s.getIdentificacion(), 0, ((Pasajero)s).isEconomica())+"\n";
+				}
+			}
 		}
 		catch (Exception e) 
 		{
-			System.out.println("no se pudo cancelar la reserva");
+			e.printStackTrace();
+			return "No hay rutas posibles";
 		}
-		System.out.println("Se cancelo la reserva");
+		return resp;
 	}
 }

@@ -183,18 +183,16 @@ public class VuelAndesMaster {
 			return "el vuelo es del tipo erroneo";
 	}
 	
-	public String registrarReserva2(String tipoId,int idViajero, String idAeroLlegada,String idAeroSalida, boolean economica, String fecha1,int vueltas, String aero) throws Exception 
+	public String registrarReserva2(String tipoId,int idViajero, String idAeroLlegada,String idAeroSalida, boolean economica, Date fecha1,int vueltas, String aero) throws Exception 
 	{
 		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
 		daoAviones = daoAviones == null ? new DAOAviones(connectionDataPath) : daoAviones;
 		daoReservas = daoReservas== null ? new DAOReserva(connectionDataPath) : daoReservas;	
 		ArrayList<String> cri =new ArrayList<>();
 		cri.add("AEROPUERTO_SALIDA");
-		cri.add("FECHA_SALIDA");
 		cri.add("TIPO");
 		ArrayList<String> data =new ArrayList<>();
 		data.add(""+idAeroSalida);
-		data.add(fecha1);
 		data.add(""+0);
 		if(aero!= null)
 		{
@@ -204,7 +202,7 @@ public class VuelAndesMaster {
 		ArrayList<String> respuesta = null;
 		ArrayList<Vuelo> vuelos = daoVuelos.buscarVuelosPorCriterio(cri, data);
 		Vuelo v = llegaA(vuelos, idAeroLlegada);
-		if(v!=null )
+		if(v!=null && fecha1.before(v.getFechaSalida()) )
 		{
 			Avion avion = daoAviones.buscarAvionPK(v.getAvion());
 			ArrayList<Cliente> clientes = daoReservas.buscarReservaporvuelo(v.getCodigo(), v.getAerolinea());
@@ -244,9 +242,9 @@ public class VuelAndesMaster {
 			eco = ((AvionPasajeros)avion).getAsientosEconomica()-eco;
 			ejecu = ((AvionPasajeros)avion).getAsientosEjecutivo() - ejecu;
 
-			if((economica && eco>=1)||(!economica && ejecu>=1))		
+			if(((economica && eco>=1)||(!economica && ejecu>=1))&& fecha1.before(vuel.getFechaSalida()))		
 			{
-				String ans =registrarReserva2(tipoId,idViajero, vuel.getLlegada(), idAeroSalida, economica, vuel.getFechaLlegada().toString(), vueltas+1,aero);
+				String ans =registrarReserva2(tipoId,idViajero, vuel.getLlegada(), idAeroSalida, economica, vuel.getFechaLlegada(), vueltas+1,aero);
 				if(ans!=null)
 					respuesta.add( vuel.getAerolinea()+";"+vuel.getCodigo()+"/"+ans);
 			}
@@ -306,6 +304,25 @@ public class VuelAndesMaster {
 		return null;
 	}
 
+	public String reasignar(String idTipo, int idcliente, String idVuelo, boolean aero,Date fecha) throws Exception 
+	{
+		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
+		daoAviones = daoAviones == null ? new DAOAviones(connectionDataPath) : daoAviones;
+		daoReservas = daoReservas== null ? new DAOReserva(connectionDataPath) : daoReservas;	
+		
+		Vuelo v = daoVuelos.darVuelosPorPK(Integer.parseInt(idVuelo.split(";")[1]), idVuelo.split(";")[0]);
+		Cliente c = daoClientes.buscarClientePK(idcliente, idTipo);
+		String reserv = null;
+		fecha = fecha==null?new Date():fecha;
+		if(aero)
+		{
+			reserv = registrarReserva2(idTipo, idcliente, v.getLlegada(), v.getSalida(), ((Pasajero)c).isEconomica(),fecha , 0, v.getAerolinea());
+		}
+		else
+			reserv = registrarReserva2(idTipo, idcliente, v.getLlegada(), v.getSalida(), ((Pasajero)c).isEconomica(),fecha , 0, null);
+		return reserv;
+	}
+	
 	public Vuelo llegaA(ArrayList<Vuelo>vuelos, String llegada)
 	{
 		boolean encontrado = false;
@@ -376,11 +393,41 @@ public class VuelAndesMaster {
 		daoClientes = daoClientes == null ? new DAOCliente(connectionDataPath) : daoClientes;
 		return daoClientes.darClientes();
 	}
+	public ArrayList<Cliente> darCLientesPorVuelo(String idVuelo) throws Exception {
+		daoClientes = daoClientes == null ? new DAOCliente(connectionDataPath) : daoClientes;
+		daoReservas = daoReservas == null ? new DAOReserva(connectionDataPath) : daoReservas;
+		int vuelo= Integer.parseInt(idVuelo.split(";")[1]);
+		String aerolinea = idVuelo.split(";")[0];
+		return daoReservas.buscarReservaporvuelo(vuelo, aerolinea);
+	}
 	public Cliente buscaClientePK(int id, String tip )throws Exception
 	{
 		daoClientes = daoClientes == null ? new DAOCliente(connectionDataPath) : daoClientes;
 		return daoClientes.buscarClientePK(id, tip);
 	}
+
+	public String cancelado(String idVuelo, Cliente cliente, Date fecha) throws Exception
+	{
+		String ans =reasignar(cliente.getTipoIdentificacion(),cliente.getIdentificacion(), idVuelo, true,fecha);
+		if(ans == null)
+			ans =reasignar(cliente.getTipoIdentificacion(),cliente.getIdentificacion(), idVuelo,false,fecha);
+		if(ans== null)
+			return "No hay rutas posibles";
+		String ultimo  = ans.split("/")[ans.split("/").length-1];
+		Vuelo ult= darVueloPK(Integer.parseInt(ultimo.split(";")[1]), ultimo.split(";")[0]);
+		ArrayList<String> vuelos = cliente.getVuelos();
+		for (int i = 0; i < vuelos.size(); i++) 
+		{
+			Vuelo v =darVueloPK(Integer.parseInt(vuelos.get(i).split(";")[1]), vuelos.get(i).split(";")[0]) ;
+			if(v.getFechaSalida().before(ult.getFechaLlegada()))
+			{
+				ans+="/"+cancelado( v.getAerolinea()+";"+v.getCodigo(), cliente,ult.getFechaLlegada());
+			}				
+		}
+		cancelarReservaViajeroVuelo(idVuelo+","+cliente.getTipoIdentificacion()+";"+cliente.getIdentificacion());
+		return ans;
+	}
+
 
 
 }

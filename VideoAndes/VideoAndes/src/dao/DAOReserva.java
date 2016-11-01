@@ -73,7 +73,7 @@ public class DAOReserva {
 	}
 
 	
-	public ArrayList buscarReservaporvuelo(int vuelo, String aerolinea) throws Exception {
+	public ArrayList<Cliente> buscarReservaporvuelo(int vuelo, String aerolinea) throws Exception {
 		
 		PreparedStatement prepStmt = null;
 		ArrayList<Cliente> c = new ArrayList<Cliente>();
