@@ -48,30 +48,32 @@ public class AeropuertoServices
 	}
 	
 	@DELETE
-	@Path("CancelarVuelo")
+	@Path("RF15")
 	public String RF15CancelarVuelo( @QueryParam("idVuelo") String idVuelo)
 	{
 		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
-		String resp = "se añadieron los viajes a :\n";
+		String resp = "se añadieron los viajes con codigo de reserva :\n";
 		try
 		{
 			int vuel= Integer.parseInt(idVuelo.split(";")[1]);
 			String aerolinea = idVuelo.split(";")[0];
 			ArrayList<Cliente> clientes = fachada.darCLientesPorVuelo(idVuelo); 
+			Vuelo vuelo = fachada.darVueloPK(Integer.parseInt(idVuelo.split(";")[1]), idVuelo.split(";")[0]);
+			fachada.cancelarVuelo(idVuelo);
 			for (int i = 0; i < clientes.size(); i++) 
 			{
 				Cliente s = clientes.get(i);
-				String[] vuelos = fachada.cancelado( idVuelo, s,new Date()).split("/");
+				String[] vuelos = fachada.cancelado( vuelo, s,new Date()).split("/");
 				for (int j = 0; j < vuelos.length; j++) 
 				{
-					resp+= s.getTipoIdentificacion()+";"+ s.getIdentificacion()+ "        " +fachada.registrar(vuel, aerolinea, s.getTipoIdentificacion(), s.getIdentificacion(), 0, ((Pasajero)s).isEconomica())+"\n";
+					resp+= fachada.registrar(Integer.parseInt(vuelos[j].split(";")[1]), vuelos[j].split(";")[0], s.getTipoIdentificacion(), s.getIdentificacion(), new Float(0), ((Pasajero)s).isEconomica())+"\n";
 				}
 			}
 		}
 		catch (Exception e) 
 		{
 			e.printStackTrace();
-			return "No hay rutas posibles";
+			return "No hay rutas posibles :(";
 		}
 		return resp;
 	}

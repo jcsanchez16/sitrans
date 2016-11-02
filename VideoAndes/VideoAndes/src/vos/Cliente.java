@@ -26,6 +26,20 @@ public class Cliente
 
 	private  ArrayList<String> vuelos;
 	
+	private boolean tipo;
+	
+	public boolean isTipo() {
+		return tipo;
+	}
+
+	public void setTipo(boolean tipo) {
+		this.tipo = tipo;
+	}
+
+	public void setVuelos(ArrayList<String> vuelos) {
+		this.vuelos = vuelos;
+	}
+
 	/**
 	 * Clase constructora del cliente
 	 * @param id
@@ -33,7 +47,7 @@ public class Cliente
 	 * @param direccion
 	 * @param telefono
 	 */
-	public Cliente(int id, String nombre, String nacionalidad, String correo, String tipoIdentificacion, ArrayList<String> vuel)
+	public Cliente(int id, String nombre, String nacionalidad, String correo, String tipoIdentificacion, ArrayList<String> vuel, int tipo)
 	{
 		this.identificacion = id;
 		this.nombre = nombre;
@@ -41,6 +55,7 @@ public class Cliente
 		this.correo = correo;
 		this.tipoIdentificacion=tipoIdentificacion;
 		this.vuelos = vuel;
+		this.tipo = tipo == 0? true:false;
 	}
 	
 	public void agregarVuelo(String v)

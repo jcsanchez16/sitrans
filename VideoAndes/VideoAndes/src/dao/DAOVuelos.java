@@ -153,12 +153,14 @@ public class DAOVuelos {
 				if(Integer.parseInt(rs.getString("TIPO"))==1)
 				{
 					Float carga = Float.parseFloat(rs.getString("PRECIO_DENSIDAD"));
+					ArrayList clie =reservas.buscarReservaporvuelo(codigo, aerolinea);
 					vuelos=(new VueloCarga(codigo, frecuencia, fLlegada, fSalida, avion,Salida, Llegada,aerolinea, carga,realizado, distancia, duracion,null));
 				}
 				else
 				{
 					Float ej = Float.parseFloat(rs.getString("PRECIO_EJECUTIVO"));
 					Float ec = Float.parseFloat(rs.getString("PRECIO_ECONOMICO"));
+					ArrayList clie =reservas.buscarReservaporvuelo(codigo, aerolinea);
 					vuelos=(new VueloPasajeros(codigo, frecuencia, fLlegada, fSalida, avion,Salida, Llegada,aerolinea, ej, ec,realizado, distancia, duracion,null));
 				}
 					
@@ -271,6 +273,34 @@ public class DAOVuelos {
 				} 
 				catch (SQLException exception) 
 				{
+					System.err.println("SQLException in closing Stmt:");
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			if (this.conexion != null)
+				closeConnection(this.conexion);
+		}
+	}
+
+	public void cancelarVuelo(int idv, String aero) throws Exception 
+	{
+		PreparedStatement prepStmt = null;
+		try {
+			establecerConexion();
+			String sql = "DELETE FROM VUELOS WHERE CODIGO = "+idv+" AND AEROLINEA = '"+aero+"'";
+			prepStmt = conexion.prepareStatement(sql);
+			prepStmt.execute();
+
+		} catch (SQLException e) {
+			System.err.println("SQLException in executing:");
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (prepStmt != null) {
+				try {
+					prepStmt.close();
+				} catch (SQLException exception) {
 					System.err.println("SQLException in closing Stmt:");
 					exception.printStackTrace();
 					throw exception;

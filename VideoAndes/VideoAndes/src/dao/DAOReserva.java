@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -182,6 +183,33 @@ public class DAOReserva {
 		try {
 			establecerConexion();
 			String sql = "INSERT INTO RESERVAS(ID_VUELO, ID_CLIENTE, TIPO_IDENTIFICACION, AEROLINEA) VALUES ('"+idVuelo+"', '"+id+"', '"+tipoIdentificacion+"', '"+aerolinea+"')";
+			prepStmt = conexion.prepareStatement(sql);
+			prepStmt.execute();
+		} catch (SQLException e) {
+			System.err.println("SQLException in executing:");
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (prepStmt != null) {
+				try {
+					prepStmt.close();
+				} catch (SQLException exception) {
+					System.err.println("SQLException in closing Stmt:");
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			if (this.conexion != null)
+				closeConnection(this.conexion);
+		}
+	}
+
+	public void cancelarReservas(int idv, String aero) throws Exception 
+	{
+		PreparedStatement prepStmt = null;
+		try {
+			establecerConexion();
+			String sql = "DELETE FROM RESERVAS WHERE ID_VUELO = "+idv+" AND AEROLINEA = '"+aero+"'";
 			prepStmt = conexion.prepareStatement(sql);
 			prepStmt.execute();
 

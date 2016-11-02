@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -40,22 +42,20 @@ public class AerolineaServices
 		return Response.status(200).entity(a).build();
 	}
 	
-	@POST
-	@Path("{idAeronave: \\d+}/{codigo:[A-Z]{3}[0-9]{3}}")
-	public Response RF7asignarAeronave(@PathParam("idAeronave") int idAeronave, @PathParam("codigo") String vuelo) 
+	@PUT
+	@Path("/asignar")
+	public String RF7asignarAeronave(@QueryParam("idAvion") int idAeronave, @QueryParam("aero") String aero, @QueryParam("idVuelo") int idVuelo) 
 	{
-		int idVuelo =  Integer.parseInt(vuelo.substring(3,5));
-		String aero = vuelo.substring(0, 2);
 		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
-		ArrayList<Avion> aeronaves = null;
+		String respuesta = null;
 		try 
 		{
-			fachada.asignarAeronave(idAeronave,idVuelo,aero);
+			respuesta =fachada.asignarAeronave(idAeronave,idVuelo,aero);
 		} 
 		catch (Exception e) 
 		{
-			return Response.status(500).entity(aeronaves).build();
+			return respuesta;
 		}
-		return Response.status(200).entity(aeronaves).build();
+		return respuesta;
 	}
 	}

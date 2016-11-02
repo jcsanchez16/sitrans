@@ -90,15 +90,16 @@ public class DAOCliente {
 				String correo = rs.getString("CORREO");
 				String tip = rs.getString("TIPO_IDENTIFICACION");
 				ArrayList<String> vuelos = reservas.buscarReservaPorCliente(identificacion, tip);
-				if(Integer.parseInt(rs.getString("TIPO"))==1)
+				int tipo=Integer.parseInt(rs.getString("TIPO"));
+				if(tipo==1)
 				{
 					float densidad =Float.parseFloat(rs.getString("DENSIDAD_CARGA"));
-					clientes.add(new Remitente(identificacion, nombre, nacionalidad, correo, tip, densidad,vuelos));
+					clientes.add(new Remitente(identificacion, nombre, nacionalidad, correo, tip, densidad,vuelos,tipo));
 				}
 				else
 				{
 					int eco = Integer.parseInt(rs.getString("ECONOMICO"));
-					clientes.add(new Pasajero(identificacion, nombre, nacionalidad, correo, tip, eco,vuelos));
+					clientes.add(new Pasajero(identificacion, nombre, nacionalidad, correo, tip, eco,vuelos,tipo));
 				}
 			}
 
@@ -137,15 +138,16 @@ public class DAOCliente {
 				String nacionalidad = rs.getString("NACIONALIDAD");
 				String correo = rs.getString("CORREO");
 				ArrayList<String> vuelos = reservas.buscarReservaPorCliente(id, tip);
-				if(Integer.parseInt(rs.getString("TIPO"))==1)
+				int tipo = Integer.parseInt(rs.getString("TIPO"));
+				if(tipo ==1)
 				{
 					float densidad =Float.parseFloat(rs.getString("DENSIDAD_CARGA"));
-					cliente=(new Remitente(id, nombre, nacionalidad, correo, tip, densidad,vuelos));
+					cliente=(new Remitente(id, nombre, nacionalidad, correo, tip, densidad,vuelos,tipo));
 				}
 				else
 				{
-					int tipo = Integer.parseInt(rs.getString("ECONOMICO"));
-					cliente=(new Pasajero(id, nombre, nacionalidad, correo, tip,tipo,vuelos));					
+					int ti = Integer.parseInt(rs.getString("ECONOMICO"));
+					cliente=(new Pasajero(id, nombre, nacionalidad, correo, tip,ti,vuelos,tipo));					
 				}
 			}
 			
@@ -170,13 +172,15 @@ public class DAOCliente {
 		return cliente;
 	}
 
-	public void registrarCarga(String tipoIdentificacion, int id, float carga) throws SQLException 
+	public void registrarCarga(String tipoIdentificacion, int id, Float carga) throws SQLException 
 	{
 		PreparedStatement prepStmt = null;
 		try 
 		{
+			String c = (carga+"");
+			String[] car = c.split(".");
 			establecerConexion();
-			String sql = "UPDATE CLIENTES SET DENSIDAD_CARGA= '"+carga+"' WHERE IDENTIFICACION ='" + id + "' and TIPO_IDENTIFICACION ='"+tipoIdentificacion+"'";
+			String sql = "UPDATE CLIENTES SET DENSIDAD_CARGA= '"+c.charAt(0)+","+c.charAt(2)+"' WHERE IDENTIFICACION ='" + id + "' and TIPO_IDENTIFICACION ='"+tipoIdentificacion+"'";
 			prepStmt = conexion.prepareStatement(sql);
 			prepStmt.execute();
 		} 
