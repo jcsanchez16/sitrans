@@ -1,9 +1,6 @@
 package vos;
 
-import java.util.ArrayList;
 import java.util.Date;
-
-import sun.applet.Main;
 
 /**
  * Clase que modela los vuelos que tienen los aviones
@@ -194,6 +191,7 @@ public class Vuelo
 		this.aerolinea = aerolinea;
 	}
 	
+	@Override
 	public String toString()
 	{
 		return aerolinea+codigo ;

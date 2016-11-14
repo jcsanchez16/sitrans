@@ -21,6 +21,10 @@ public class Cliente
 	//Telefono del cliente
 	private String correo;
 	
+	private double tiempo;
+	
+	private int millas;
+	
 	private String tipoIdentificacion;
 	
 
@@ -47,7 +51,7 @@ public class Cliente
 	 * @param direccion
 	 * @param telefono
 	 */
-	public Cliente(int id, String nombre, String nacionalidad, String correo, String tipoIdentificacion, ArrayList<String> vuel, int tipo)
+	public Cliente(int id, String nombre, String nacionalidad, String correo, String tipoIdentificacion, ArrayList<String> vuel, int tipo,int millas,double tiempo)
 	{
 		this.identificacion = id;
 		this.nombre = nombre;
@@ -56,8 +60,26 @@ public class Cliente
 		this.tipoIdentificacion=tipoIdentificacion;
 		this.vuelos = vuel;
 		this.tipo = tipo == 0? true:false;
+		this.tiempo = tiempo;
+		this.millas=millas;
 	}
 	
+	public double getTiempo() {
+		return tiempo;
+	}
+
+	public void setTiempo(double tiempo) {
+		this.tiempo = tiempo;
+	}
+
+	public int getMillas() {
+		return millas;
+	}
+
+	public void setMillas(int millas) {
+		this.millas = millas;
+	}
+
 	public void agregarVuelo(String v)
 	{
 		vuelos.add(v);

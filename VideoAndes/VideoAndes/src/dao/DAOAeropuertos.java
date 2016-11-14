@@ -3,7 +3,6 @@ package dao;
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +12,6 @@ import java.util.Properties;
 
 import vos.Aeropuerto;
 import vos.Vuelo;
-import javafx.scene.control.TreeTableRow;
 
 public class DAOAeropuertos {
 
@@ -79,6 +77,7 @@ public class DAOAeropuertos {
 			String sql = "SELECT * FROM AEROPUERTOS";
 			prepStmt = conexion.prepareStatement(sql);
 			ResultSet rs = prepStmt.executeQuery();
+			String h = rs.toString();
 			while (rs.next()) {
 				String ciudad = rs.getString("CIUDAD");
 				String iata = rs.getString("IATA");
@@ -88,6 +87,7 @@ public class DAOAeropuertos {
 				cri.add("AEROPUERTO_SALIDA");
 				data.add(iata);
 				ArrayList<Vuelo> vuels = vuelos.buscarVuelosPorCriterio(cri,data);
+				cri.clear();
 				cri.add(0, "AEROPUERTO_LLEGADA");
 				ArrayList<Vuelo> vuele = vuelos.buscarVuelosPorCriterio(cri,data);
 				aeropuertos.add(new Aeropuerto(ciudad, nombre, iata,vuele,vuels));

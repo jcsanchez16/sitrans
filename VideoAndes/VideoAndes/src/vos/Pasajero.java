@@ -11,9 +11,9 @@ public class Pasajero extends Cliente
 	public final static boolean EJECUTIVO = false;
 	private boolean economica;
 	
-	public Pasajero(int id, String nombre, String nacionalidad, String correo, String tipoIdentificacion, int tipo,ArrayList<String> vuelos,int tip) 
+	public Pasajero(int id, String nombre, String nacionalidad, String correo, String tipoIdentificacion, int tipo,ArrayList<String> vuelos,int tip,int millas,double tiempo) 
 	{
-		super(id, nombre, nacionalidad, correo, tipoIdentificacion,vuelos,tip);
+		super(id, nombre, nacionalidad, correo, tipoIdentificacion,vuelos,tip,millas,tiempo);
 		this.economica =tipo==0? true:false;
 	}
 	

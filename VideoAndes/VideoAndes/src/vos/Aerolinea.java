@@ -2,8 +2,6 @@ package vos;
 
 import java.util.ArrayList;
 
-import sun.applet.Main;
-
 /**
  * Clase que crea las aerolineas asociadas a los aeropuertos de vuelandes
  * @author anaca

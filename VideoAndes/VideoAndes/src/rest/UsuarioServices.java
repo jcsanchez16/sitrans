@@ -1,6 +1,5 @@
 package rest;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -8,8 +7,8 @@ import javax.servlet.ServletContext;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -17,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import vos.Cliente;
+import vos.Vuelo;
 import master.VuelAndesMaster;
 
 @Path("usuario")
@@ -208,6 +208,56 @@ public class UsuarioServices
 		}
 
 	}
-
+	@GET 
+	@Path("RFC7-8")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response RFC7(@QueryParam("aeropuerto") String aeropuerto,@QueryParam("aerolinea") String aerolinea, @QueryParam("fechaInicial") String fechaI,  @QueryParam("fechaFinal") String fechaF, @QueryParam("tipoVuelo") int tipoVuelo, @QueryParam("hLlegada")String fechaL, @QueryParam("hSalida")String fechaS,@QueryParam("order") String order,@QueryParam("orderT") String tipoOrder,@QueryParam("group") String group,@QueryParam("paraGroup")String pGroup,@QueryParam("siAero")int aero)
+	{
+		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
+		ArrayList<Vuelo> vuelos = new ArrayList<>();
+		boolean aeros =aero==0? true:false;
+		try
+		{
+			vuelos = fachada.buscarVuelos7(aeropuerto,aerolinea,fechaI,fechaF,fechaL,fechaS,tipoVuelo,order,tipoOrder,group,pGroup,aeros); 
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			ArrayList<String> temp = new ArrayList<String>();
+			temp.add(e.getMessage());
+			return Response.status(500).entity(temp).build();
+		}
+		return Response.status(200).entity(vuelos).build();
+	}
+	@GET 
+	@Path("RFC9")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response RFC9(@QueryParam("aerolinea") String aerolinea, @QueryParam("fechaInicial") String fechaI,  @QueryParam("fechaFinal") String fechaF, @QueryParam("tipoVuelo") int tipoVuelo,@QueryParam("order") String order,@QueryParam("orderT") String tipoOrder)
+	{
+		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
+		ArrayList<Cliente> usuarios = new ArrayList<>();
+		try
+		{
+			usuarios = fachada.clientesViajeros(aerolinea,fechaI,fechaF,tipoVuelo,order,tipoOrder); 
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			ArrayList<String> temp = new ArrayList<String>();
+			temp.add(e.getMessage());
+			return Response.status(500).entity(temp).build();
+		}
+		return Response.status(200).entity(usuarios).build();
+	}
+	
+	
+	@PUT 
+	@Path("cargar")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public void cargar(@QueryParam("aerolinea") String aerolinea)
+	{
+		VuelAndesMaster fachada =VuelAndesMaster.darInstancia(getPath());
+		 fachada.cargar(null);
+	}
 
 }

@@ -1,14 +1,7 @@
 package master;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.sql.SQLException;
-import java.sql.Savepoint;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Properties;
-
 import dao.DAOAerolineas;
 import dao.DAOAeropuertos;
 import dao.DAOAviones;
@@ -24,7 +17,6 @@ import vos.Cliente;
 import vos.Pasajero;
 import vos.Remitente;
 import vos.Vuelo;
-import vos.VueloPasajeros;
 
 
 public class VuelAndesMaster {
@@ -121,8 +113,8 @@ public class VuelAndesMaster {
 	
 	
 	public ArrayList<Cliente> darCLientes() throws Exception {
-		daoClientes = daoClientes == null ? new DAOCliente(connectionDataPath) : daoClientes;
-		return daoClientes.darClientes();
+		daoClientes = daoClientes == null ? new DAOCliente(connectionDataPath) : daoClientes;		
+		return daoClientes.contarTiempos(daoClientes.darClientes());
 	}
 	public ArrayList<Cliente> darCLientesPorVuelo(String idVuelo) throws Exception {
 		daoClientes = daoClientes == null ? new DAOCliente(connectionDataPath) : daoClientes;
@@ -441,6 +433,47 @@ public class VuelAndesMaster {
 		daoReservas = daoReservas== null ? new DAOReserva(connectionDataPath) : daoReservas;		
 		daoReservas.cancelarReservas(Integer.parseInt(idVuelo.split(";")[1]), idVuelo.split(";")[0]);
 		daoVuelos.cancelarVuelo(Integer.parseInt(idVuelo.split(";")[1]), idVuelo.split(";")[0]);
+	}
+
+	
+	public ArrayList<Vuelo> buscarVuelos7(String aeropuerto, String aerolinea, String fechaI,
+			String fechaF, String fechaL, String fechaS, int pasajeros,
+			String order, String tipoOrder, String group, String pGroup,boolean aero) throws Exception 
+	{
+		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
+		ArrayList<String> cri = new ArrayList<>();
+		ArrayList<String> data = new ArrayList<>();
+		cri.add("AEROPUERTO_SALIDA");
+		cri.add("AEROPUERTO_LLEGADA");
+		cri.add("HORA_SALIDA");
+		cri.add("HORA_LLEGADA");
+		cri.add("TIPO");
+		data.add(aeropuerto);
+		data.add(aeropuerto);
+		data.add(fechaS);
+		data.add(fechaL);		
+		data.add(pasajeros+"");
+		if(aero)
+		{
+			cri.add("AEROLINEA");
+			data.add(aerolinea);
+			return daoVuelos.buscarVuelosPorCriterio2(cri, data,fechaF,fechaI,order,tipoOrder,group,pGroup);
+		}
+		return daoVuelos.buscarVuelosPorCriterio3(cri, data,fechaF,fechaI,order,tipoOrder,group,pGroup,aerolinea);
+	}
+
+	public ArrayList<Cliente> clientesViajeros(String aerolinea, String fechaI,
+			String fechaF, int tipoVuelo, String order, String tipoOrder) 
+	{
+		
+		return null;
+	}
+
+	public void cargar(String dir) 
+	{
+		daoVuelos = daoVuelos == null? new DAOVuelos(connectionDataPath):daoVuelos;
+		daoVuelos.cargar(dir);
+		
 	}
 
 

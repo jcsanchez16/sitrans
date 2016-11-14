@@ -3,7 +3,6 @@ package dao;
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +13,6 @@ import java.util.Properties;
 import vos.Aerolinea;
 import vos.Avion;
 import vos.Vuelo;
-import javafx.scene.control.TreeTableRow;
 
 public class DAOAerolineas {
 

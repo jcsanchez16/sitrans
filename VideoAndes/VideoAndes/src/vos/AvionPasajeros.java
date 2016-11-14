@@ -2,8 +2,6 @@ package vos;
 
 import java.util.ArrayList;
 
-import com.sun.org.apache.bcel.internal.generic.CPInstruction;
-
 public class AvionPasajeros extends Avion
 {
 	private int asientosEconomica;

@@ -3,7 +3,6 @@ package dao;
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,13 +10,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import vos.Aerolinea;
-import vos.Avion;
 import vos.Cliente;
 import vos.Pasajero;
 import vos.Remitente;
 import vos.Vuelo;
-import javafx.scene.control.TreeTableRow;
 
 public class DAOCliente {
 
@@ -34,11 +30,14 @@ public class DAOCliente {
 	private ArrayList<Cliente> clientes;
 	
 	private DAOReserva reservas;
+	
+	private DAOVuelos vuel;
 
 	public DAOCliente(String conectionData) {
 		initConnectionData(conectionData);
 		clientes = new ArrayList<Cliente>();
 		reservas = new DAOReserva(conectionData);
+		vuel = new DAOVuelos(conectionData);
 	}
 
 	private void initConnectionData(String conectionData) {
@@ -90,16 +89,16 @@ public class DAOCliente {
 				String correo = rs.getString("CORREO");
 				String tip = rs.getString("TIPO_IDENTIFICACION");
 				ArrayList<String> vuelos = reservas.buscarReservaPorCliente(identificacion, tip);
-				int tipo=Integer.parseInt(rs.getString("TIPO"));
+				int tipo=Integer.parseInt(rs.getString("TIPO"));				
 				if(tipo==1)
 				{
 					float densidad =Float.parseFloat(rs.getString("DENSIDAD_CARGA"));
-					clientes.add(new Remitente(identificacion, nombre, nacionalidad, correo, tip, densidad,vuelos,tipo));
+					clientes.add(new Remitente(identificacion, nombre, nacionalidad, correo, tip, densidad,vuelos,tipo, 0, 0));
 				}
 				else
 				{
 					int eco = Integer.parseInt(rs.getString("ECONOMICO"));
-					clientes.add(new Pasajero(identificacion, nombre, nacionalidad, correo, tip, eco,vuelos,tipo));
+					clientes.add(new Pasajero(identificacion, nombre, nacionalidad, correo, tip, eco,vuelos,tipo, 0, 0));
 				}
 			}
 
@@ -142,12 +141,12 @@ public class DAOCliente {
 				if(tipo ==1)
 				{
 					float densidad =Float.parseFloat(rs.getString("DENSIDAD_CARGA"));
-					cliente=(new Remitente(id, nombre, nacionalidad, correo, tip, densidad,vuelos,tipo));
+					cliente=(new Remitente(id, nombre, nacionalidad, correo, tip, densidad,vuelos,tipo,0,0));
 				}
 				else
 				{
 					int ti = Integer.parseInt(rs.getString("ECONOMICO"));
-					cliente=(new Pasajero(id, nombre, nacionalidad, correo, tip,ti,vuelos,tipo));					
+					cliente=(new Pasajero(id, nombre, nacionalidad, correo, tip,ti,vuelos,tipo,0,0));					
 				}
 			}
 			
@@ -242,6 +241,32 @@ public class DAOCliente {
 			}
 			if (this.conexion != null)
 				closeConnection(this.conexion);
+			
 		}
+	}
+	public ArrayList<Cliente> contarTiempos(ArrayList<Cliente> clientes) throws Exception
+	{
+		for (int i = 0; i < clientes.size(); i++) 
+		{			
+			ArrayList<String> vuelos =clientes.get(i).getVuelos();
+			int millas = 0;
+			double horas=0;
+			double minutos=0;
+			for (int j = 0; j < vuelos.size(); j++) 
+			{
+				int g=Integer.parseInt(vuelos.get(j).split(";")[1]);
+				String k =vuelos.get(j).split(";")[0];
+				Vuelo este = vuel.darVuelosPorPK(g, k);
+				millas+=este.getDistancia();
+				String[] h = este.getDuracion().split(":");
+				horas+=Integer.parseInt(h[0]);
+				minutos+=Integer.parseInt(h[1]);
+			}
+			minutos= minutos/60;
+			horas+=minutos;
+			clientes.get(i).setMillas(millas);
+			clientes.get(i).setTiempo(horas);
+		}
+		return clientes;
 	}
 }

@@ -2,8 +2,6 @@ package vos;
 
 import java.util.ArrayList;
 
-import sun.applet.Main;
-
 /**
  * Clase que modela los aviones que maneja VuelAndes
  * @author anaca
