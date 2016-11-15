@@ -32,6 +32,35 @@ public class Cliente
 	
 	private boolean tipo;
 	
+	private ArrayList<Vuelo> mostrar;
+
+	/**
+	 * Clase constructora del cliente
+	 * @param id
+	 * @param nombre
+	 * @param mostra 
+	 * @param direccion
+	 * @param telefono
+	 */
+	public Cliente(int id, String nombre, String nacionalidad, String correo, String tipoIdentificacion, ArrayList<String> vuel, int tipo,int millas,double tiempo, ArrayList<Vuelo> mostra)
+	{
+		this.identificacion = id;
+		this.nombre = nombre;
+		this.nacionalidad = nacionalidad;
+		this.correo = correo;
+		this.tipoIdentificacion=tipoIdentificacion;
+		this.vuelos = vuel;
+		this.tipo = tipo == 0? true:false;
+		this.tiempo = tiempo;
+		this.millas=millas;
+		this.mostrar = mostra;
+	}
+	public ArrayList<Vuelo> getMostrar() {
+		return mostrar;
+	}
+	public void setMostrar(ArrayList<Vuelo> mostrar) {
+		this.mostrar = mostrar;
+	}
 	public boolean isTipo() {
 		return tipo;
 	}
@@ -43,27 +72,6 @@ public class Cliente
 	public void setVuelos(ArrayList<String> vuelos) {
 		this.vuelos = vuelos;
 	}
-
-	/**
-	 * Clase constructora del cliente
-	 * @param id
-	 * @param nombre
-	 * @param direccion
-	 * @param telefono
-	 */
-	public Cliente(int id, String nombre, String nacionalidad, String correo, String tipoIdentificacion, ArrayList<String> vuel, int tipo,int millas,double tiempo)
-	{
-		this.identificacion = id;
-		this.nombre = nombre;
-		this.nacionalidad = nacionalidad;
-		this.correo = correo;
-		this.tipoIdentificacion=tipoIdentificacion;
-		this.vuelos = vuel;
-		this.tipo = tipo == 0? true:false;
-		this.tiempo = tiempo;
-		this.millas=millas;
-	}
-	
 	public double getTiempo() {
 		return tiempo;
 	}

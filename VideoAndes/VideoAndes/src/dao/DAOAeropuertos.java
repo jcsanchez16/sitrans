@@ -156,7 +156,48 @@ public class DAOAeropuertos {
 		return aeropuertos;
 	}
 
-	
+	public ArrayList<Aeropuerto> buscarAeropuertoCiudad(String ciuda) throws Exception {
+		PreparedStatement prepStmt = null;
+		ArrayList<Aeropuerto> aeropuertos = new ArrayList<>();
+		try {
+			establecerConexion();
+			String sql = "SELECT * FROM AEROPUERTOS WHERE CIUDAD ='" + ciuda + "'";
+			prepStmt = conexion.prepareStatement(sql);
+			ResultSet rs = prepStmt.executeQuery();
+
+			while (rs.next()) {
+				String ciudad = rs.getString("CIUDAD");
+				String iata = rs.getString("IATA");
+				String nombre = rs.getString("NOMBRE");
+				ArrayList<String> cri =new ArrayList<>();
+				ArrayList<String> data =new ArrayList<>();
+				cri.add("AEROPUERTO_SALIDA");
+				data.add(iata);
+				ArrayList<Vuelo> vuels = vuelos.buscarVuelosPorCriterio(cri,data);
+				cri.add(0, "AEROPUERTO_LLEGADA");
+				ArrayList<Vuelo> vuele = vuelos.buscarVuelosPorCriterio(cri,data);
+				aeropuertos.add(new Aeropuerto(ciudad, nombre, iata,vuele,vuels));
+			}
+
+		} catch (SQLException e) {
+			System.err.println("SQLException in executing:");
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (prepStmt != null) {
+				try {
+					prepStmt.close();
+				} catch (SQLException exception) {
+					System.err.println("SQLException in closing Stmt:");
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			if (this.conexion != null)
+				closeConnection(this.conexion);
+		}
+		return aeropuertos;
+	}
 	
 
 }

@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 
 import vos.Cliente;
 import vos.Vuelo;
+import vos.VueloPasajeros;
 import master.VuelAndesMaster;
 
 @Path("usuario")
@@ -48,11 +49,17 @@ public class UsuarioServices
 	@GET
 	@Path("prueba")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public java.util.Date Get() 
+	public String Get() 
 	{
 		VuelAndesMaster master = VuelAndesMaster.darInstancia(getPath());
-		java.util.Date g = new java.util.Date();
-		return g;
+		
+		try {
+			return master.darAerolineas().get(0).toString();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 	@POST
 	@Path("RF9")
@@ -232,13 +239,13 @@ public class UsuarioServices
 	@GET 
 	@Path("RFC9")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response RFC9(@QueryParam("aerolinea") String aerolinea, @QueryParam("fechaInicial") String fechaI,  @QueryParam("fechaFinal") String fechaF, @QueryParam("tipoVuelo") int tipoVuelo,@QueryParam("order") String order,@QueryParam("orderT") String tipoOrder)
+	public Response RFC9( @QueryParam("fechaInicial") String fechaI,  @QueryParam("fechaFinal") String fechaF, @QueryParam("tipoVuelo") int tipoVuelo,@QueryParam("order") String order,@QueryParam("orderT") String tipoOrder,@QueryParam("minMillas") int limite)
 	{
 		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
 		ArrayList<Cliente> usuarios = new ArrayList<>();
 		try
 		{
-			usuarios = fachada.clientesViajeros(aerolinea,fechaI,fechaF,tipoVuelo,order,tipoOrder); 
+			usuarios = fachada.clientesViajeros(fechaI,fechaF,tipoVuelo,order,tipoOrder, limite); 
 		}
 		catch (Exception e) 
 		{
@@ -248,6 +255,39 @@ public class UsuarioServices
 			return Response.status(500).entity(temp).build();
 		}
 		return Response.status(200).entity(usuarios).build();
+	}
+	
+	@GET 
+	@Path("RFC9")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public String RFC10( @QueryParam("fechaInicial") String fechaI,  @QueryParam("fechaFinal") String fechaF, @QueryParam("ciudad1") String ciudad1,@QueryParam("ciudad2") String ciudad2)
+	{
+		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
+		ArrayList<Vuelo> v = new ArrayList<>();
+		try
+		{
+			v = fachada.viajesCiudad(fechaI,fechaF,ciudad1,ciudad2); 
+			String resp="[";
+			for (int i = 0; i < v.size(); i++) 
+			{
+				Vuelo este = v.get(i);
+				resp+= este.toString();
+				if(este.isTipo())
+				{
+					((VueloPasajeros)este).getClientes().size();
+				}
+				resp+="}";
+			}
+			resp+="]";
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			ArrayList<String> temp = new ArrayList<String>();
+			temp.add(e.getMessage());
+			return resp;
+		}
+		return resp;
 	}
 	
 	

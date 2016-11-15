@@ -2,6 +2,7 @@ package master;
 
 import java.util.ArrayList;
 import java.util.Date;
+
 import dao.DAOAerolineas;
 import dao.DAOAeropuertos;
 import dao.DAOAviones;
@@ -114,7 +115,7 @@ public class VuelAndesMaster {
 	
 	public ArrayList<Cliente> darCLientes() throws Exception {
 		daoClientes = daoClientes == null ? new DAOCliente(connectionDataPath) : daoClientes;		
-		return daoClientes.contarTiempos(daoClientes.darClientes());
+		return contarTiempos(daoClientes.darClientes());
 	}
 	public ArrayList<Cliente> darCLientesPorVuelo(String idVuelo) throws Exception {
 		daoClientes = daoClientes == null ? new DAOCliente(connectionDataPath) : daoClientes;
@@ -461,20 +462,91 @@ public class VuelAndesMaster {
 		}
 		return daoVuelos.buscarVuelosPorCriterio3(cri, data,fechaF,fechaI,order,tipoOrder,group,pGroup,aerolinea);
 	}
-
-	public ArrayList<Cliente> clientesViajeros(String aerolinea, String fechaI,
-			String fechaF, int tipoVuelo, String order, String tipoOrder) 
+	public ArrayList<Cliente> contarTiempos(ArrayList<Cliente> clientes) throws Exception
 	{
-		
-		return null;
+		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
+		for (int i = 0; i < clientes.size(); i++) 
+		{			
+			ArrayList<String> vuelos =clientes.get(i).getVuelos();
+			int millas = 0;
+			double horas=0;
+			double minutos=0;
+			for (int j = 0; j < vuelos.size(); j++) 
+			{
+				int g=Integer.parseInt(vuelos.get(j).split(";")[1]);
+				String k =vuelos.get(j).split(";")[0];
+				Vuelo este = daoVuelos.darVuelosPorPK(g, k);
+				millas+=este.getDistancia();
+				String[] h = este.getDuracion().split(":");
+				horas+=Integer.parseInt(h[0]);
+				minutos+=Integer.parseInt(h[1]);
+			}
+			minutos= minutos/60;
+			horas+=minutos;
+			clientes.get(i).setMillas(millas);
+			clientes.get(i).setTiempo(horas);
+		}
+		return clientes;
+	}
+	public ArrayList<Cliente> contarTiempos1(ArrayList<Cliente> clientes, String fechaI, String fechaF, int tipoVuelo, String order, String tipoOrder,int limite) throws Exception
+	{
+		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
+		ArrayList<Cliente> cliente = new ArrayList<>(); 
+		for (int i = 0; i < clientes.size(); i++) 
+		{			
+			ArrayList<String> vuelos =clientes.get(i).getVuelos();
+			if(vuelos.size()>0)
+			{			
+				ArrayList<Vuelo> vuelo = daoVuelos.vuelosUsuario(vuelos,fechaI,fechaF,tipoVuelo,order,tipoOrder);
+				int millas = 0;
+				double horas=0;
+				double minutos=0;
+				for (int j = 0; j < vuelo.size(); j++) 
+				{
+					Vuelo este = vuelo.get(j);
+					millas+=este.getDistancia();
+					String[] h = este.getDuracion().split(":");
+					horas+=Integer.parseInt(h[0]);
+					minutos+=Integer.parseInt(h[1]);
+				}
+				minutos= minutos/60;
+				horas+=minutos;
+				clientes.get(i).setMillas(millas);
+				clientes.get(i).setTiempo(horas);
+				clientes.get(i).setMostrar(vuelo);
+				if(millas>=limite)
+					cliente.add(clientes.get(i));
+				
+			}
+		}
+		return cliente;
 	}
 
+	public ArrayList<Cliente> clientesViajeros( String fechaI,
+			String fechaF, int tipoVuelo, String order, String tipoOrder, int limite) throws Exception 
+	{
+		daoClientes = daoClientes == null ? new DAOCliente(connectionDataPath) : daoClientes;
+		return contarTiempos1(daoClientes.darClientes(),fechaI,fechaF,tipoVuelo,order,tipoOrder,limite);
+	}
+	
+	public ArrayList<Vuelo> viajesCiudad(String fechaI, String fechaF,
+				String ciudad1, String ciudad2)  throws Exception
+	{
+		daoVuelos = daoVuelos == null ? new DAOVuelos(connectionDataPath) : daoVuelos;
+		daoAeropuertos = daoAeropuertos == null ? new DAOAeropuertos(connectionDataPath) : daoAeropuertos;
+		ArrayList<Aeropuerto> aeropuertos = daoAeropuertos.buscarAeropuertoCiudad(ciudad1);
+		aeropuertos.addAll(daoAeropuertos.buscarAeropuertoCiudad(ciudad2));
+		return daoVuelos.buscarVuelosPorCiudades(fechaF, fechaI, aeropuertos);
+	}
+	
 	public void cargar(String dir) 
 	{
 		daoVuelos = daoVuelos == null? new DAOVuelos(connectionDataPath):daoVuelos;
 		daoVuelos.cargar(dir);
 		
 	}
+
+	
 
 
 

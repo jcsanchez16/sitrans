@@ -93,12 +93,12 @@ public class DAOCliente {
 				if(tipo==1)
 				{
 					float densidad =Float.parseFloat(rs.getString("DENSIDAD_CARGA"));
-					clientes.add(new Remitente(identificacion, nombre, nacionalidad, correo, tip, densidad,vuelos,tipo, 0, 0));
+					clientes.add(new Remitente(identificacion, nombre, nacionalidad, correo, tip, densidad,vuelos,tipo, 0, 0,null));
 				}
 				else
 				{
 					int eco = Integer.parseInt(rs.getString("ECONOMICO"));
-					clientes.add(new Pasajero(identificacion, nombre, nacionalidad, correo, tip, eco,vuelos,tipo, 0, 0));
+					clientes.add(new Pasajero(identificacion, nombre, nacionalidad, correo, tip, eco,vuelos,tipo, 0, 0,null));
 				}
 			}
 
@@ -141,12 +141,12 @@ public class DAOCliente {
 				if(tipo ==1)
 				{
 					float densidad =Float.parseFloat(rs.getString("DENSIDAD_CARGA"));
-					cliente=(new Remitente(id, nombre, nacionalidad, correo, tip, densidad,vuelos,tipo,0,0));
+					cliente=(new Remitente(id, nombre, nacionalidad, correo, tip, densidad,vuelos,tipo,0,0,null));
 				}
 				else
 				{
 					int ti = Integer.parseInt(rs.getString("ECONOMICO"));
-					cliente=(new Pasajero(id, nombre, nacionalidad, correo, tip,ti,vuelos,tipo,0,0));					
+					cliente=(new Pasajero(id, nombre, nacionalidad, correo, tip,ti,vuelos,tipo,0,0,null));					
 				}
 			}
 			
@@ -244,29 +244,5 @@ public class DAOCliente {
 			
 		}
 	}
-	public ArrayList<Cliente> contarTiempos(ArrayList<Cliente> clientes) throws Exception
-	{
-		for (int i = 0; i < clientes.size(); i++) 
-		{			
-			ArrayList<String> vuelos =clientes.get(i).getVuelos();
-			int millas = 0;
-			double horas=0;
-			double minutos=0;
-			for (int j = 0; j < vuelos.size(); j++) 
-			{
-				int g=Integer.parseInt(vuelos.get(j).split(";")[1]);
-				String k =vuelos.get(j).split(";")[0];
-				Vuelo este = vuel.darVuelosPorPK(g, k);
-				millas+=este.getDistancia();
-				String[] h = este.getDuracion().split(":");
-				horas+=Integer.parseInt(h[0]);
-				minutos+=Integer.parseInt(h[1]);
-			}
-			minutos= minutos/60;
-			horas+=minutos;
-			clientes.get(i).setMillas(millas);
-			clientes.get(i).setTiempo(horas);
-		}
-		return clientes;
-	}
+	
 }
