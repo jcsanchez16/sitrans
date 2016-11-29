@@ -321,7 +321,7 @@ public class DAOVuelos {
 			establecerConexion();
 			String sql="";
 			if(group!= null)
-				sql += "SELECT "+group+", "+pGroup+" AS GROUP FROM VUELOS WHERE ("+cri.get(0)+" ='"+data.get(0)+"' OR "+cri.get(1)+" ='"+data.get(1)+"') ";
+				sql += "SELECT "+group+", "+pGroup+" AS GROUP FROM VUELOS WHERE (("+cri.get(0)+" ='"+data.get(0)+"' AND (FECHA_SALIDA BETWEEN '"+fechaI+"' AND '"+fechaF+"')) OR ("+cri.get(1)+" ='"+data.get(1)+"' AND (FECHA_LLEGADA BETWEEN '"+fechaI+"' AND '"+fechaF+"'))) ";
 			else
 				sql += "SELECT * FROM VUELOS WHERE (("+cri.get(0)+" ='"+data.get(0)+"' AND (FECHA_SALIDA BETWEEN '"+fechaI+"' AND '"+fechaF+"')) OR ("+cri.get(1)+" ='"+data.get(1)+"' AND (FECHA_LLEGADA BETWEEN '"+fechaI+"' AND '"+fechaF+"'))) ";
 			for (int i = 2; i < cri.size(); i++) 
@@ -393,7 +393,7 @@ public class DAOVuelos {
 			establecerConexion();
 			String sql="";
 			if(group!= null)
-				sql += "SELECT "+group+", "+pGroup+" AS GROUP FROM VUELOS WHERE ("+cri.get(0)+" ='"+data.get(0)+"' OR "+cri.get(1)+" ='"+data.get(1)+"') ";
+				sql += "SELECT "+group+", "+pGroup+" AS GROUP FROM VUELOS WHERE (("+cri.get(0)+" ='"+data.get(0)+"' AND (FECHA_SALIDA BETWEEN '"+fechaI+"' AND '"+fechaF+"')) OR ("+cri.get(1)+" ='"+data.get(1)+"' AND (FECHA_LLEGADA BETWEEN '"+fechaI+"' AND '"+fechaF+"'))) ";
 			else
 				sql += "SELECT * FROM VUELOS WHERE (("+cri.get(0)+" ='"+data.get(0)+"' AND (FECHA_SALIDA BETWEEN '"+fechaI+"' AND '"+fechaF+"')) OR ("+cri.get(1)+" ='"+data.get(1)+"' AND (FECHA_LLEGADA BETWEEN '"+fechaI+"' AND '"+fechaF+"'))) ";
 			for (int i = 2; i < cri.size(); i++) 
@@ -456,24 +456,70 @@ public class DAOVuelos {
 		return vuelos;
 	}
 
-	public void cargar(String dir) 
+	public void cargar(String dir, int num) throws Exception 
 	{
+		PreparedStatement prepStmt = null;
+        int i = 0;
 		try {
              
             CsvReader dat = new CsvReader("C:/Users/jc.sanchez16/comas.csv");
             dat.readHeaders();
- 
-            while (dat.readRecord()) {
-                String codigo = dat.get(0);
-                           
+            establecerConexion();
+            while (dat.readRecord()) 
+            {
+            	if(i>=num)
+            	{
+	                String CODIGO = dat.get(0);
+	                String FRECUENCIA_SEMANAL = dat.get(1);
+	                String FECHA_SALIDA = dat.get(2);
+	                String FECHA_LLEGADA = dat.get(3);
+	                String AEROPUERTO_SALIDA = dat.get(4).substring(0,3);
+	                String AEROPUERTO_LLEGADA = dat.get(5).substring(0,3);
+	                String AVION = dat.get(6);
+	                String AEROLINEA = dat.get(7);
+	                String TIPO = dat.get(8);
+	                String PRECIO_EJECUTIVO = dat.get(9);      
+	                String PRECIO_ECONOMICO = dat.get(10);
+	                String PRECIO_DENSIDAD = dat.get(11);
+	                String DISTANCIA = dat.get(12); 
+	                String DURACION = dat.get(13);
+	                String REALIZADO = dat.get(14);      
+	                String NACIONAL = dat.get(15);
+	                String HORA_SALIDA = dat.get(16);
+	                String HORA_LLEGADA = dat.get(17);   
+	                String sql ="INSERT INTO VUELOS (CODIGO, FRECUENCIA_SEMANAL, FECHA_SALIDA, FECHA_LLEGADA, AEROPUERTO_SALIDA, AEROPUERTO_LLEGADA, AVION, AEROLINEA, TIPO, PRECIO_EJECUTIVO, PRECIO_ECONOMICO, PRECIO_DENSIDAD, DISTANCIA, DURACION, REALIZADO, NACIONAL, HORA_SALIDA, HORA_LLEGADA) VALUES "
+	                		+ "('"+CODIGO+"', '"+FRECUENCIA_SEMANAL+"', '"+FECHA_SALIDA+"', '"+FECHA_LLEGADA+"', '"+AEROPUERTO_SALIDA+"', '"+AEROPUERTO_LLEGADA+"', '"+AVION+"', '"+AEROLINEA+"', '"+TIPO+"', '"+PRECIO_EJECUTIVO+"', '"+PRECIO_ECONOMICO+"', '"+PRECIO_DENSIDAD+"', '"+DISTANCIA+"', '"+DURACION+"', '"+REALIZADO+"', '"+NACIONAL+"', '"+HORA_SALIDA+"', '"+HORA_LLEGADA+"')";
+	                prepStmt = conexion.prepareStatement(sql);
+	    			prepStmt.executeUpdate();
+            	}
+    			i++;
             }
              
             dat.close();
             
              
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+		catch (Exception e) 
+        {
+        	System.err.println("SQLException in executing:");
+        	cargar(dir, i);
+		e.printStackTrace();
+		throw e;
         } 
+		finally {
+			if (prepStmt != null) {
+				try {
+					prepStmt.close();
+				} catch (SQLException exception) {
+					System.err.println("SQLException in closing Stmt:");
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			if (this.conexion != null)
+				closeConnection(this.conexion);
+		}
+	
 	}
 
 	public ArrayList<Vuelo> vuelosUsuario(ArrayList<String> vuelos2,

@@ -542,7 +542,11 @@ public class VuelAndesMaster {
 	public void cargar(String dir) 
 	{
 		daoVuelos = daoVuelos == null? new DAOVuelos(connectionDataPath):daoVuelos;
-		daoVuelos.cargar(dir);
+		try {
+			daoVuelos.cargar(dir,0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 

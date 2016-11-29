@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="lib" path="C:/Users/jc.sanchez16/Downloads/javacsv2.1/javacsv.jar"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry exported="true" kind="con" path="org.jboss.ide.eclipse.as.classpath.core.ejb3.classpathContainer/WildFly 8.0 Runtime Server"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javax.ws.rs"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/cvs"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/servlet"/>
-	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.jboss.ide.eclipse.as.core.server.runtime.runtimeTarget/WildFly 8.0 Runtime 1">
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/javax.ws.rs"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/servlet"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jst.server.core.container/org.jboss.ide.eclipse.as.core.server.runtime.runtimeTarget/WildFly 8.0 Runtime 1">
 		<attributes>
 			<attribute name="owner.project.facets" value="jst.web"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_101">
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_101">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/CVSServer"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

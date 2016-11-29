@@ -194,7 +194,7 @@ public class Vuelo
 	@Override
 	public String toString()
 	{
-		return "{\"codigo\":"+codigo+",\"frecuencia\":"+frecuencia+",\"fechaSalida\":\""+fechaSalida+"\",\"fechaLlegada\":\""+fechaLlegada+"\",\"salida\":\""+salida+"\",\"llegada\":\""+llegada+"\",\"avion\":"+avion+",\"aerolinea\":\""+aerolinea+"\",\"realizado\":"+realizado+",\"distancia\""+distancia+",\"duracion\":\""+duracion+"\",\"tipo\":"+tipo+"}";
+		return "{\"codigo\":"+codigo+",\"frecuencia\":"+frecuencia+",\"fechaSalida\":\""+fechaSalida+"\",\"fechaLlegada\":\""+fechaLlegada+"\",\"salida\":\""+salida+"\",\"llegada\":\""+llegada+"\",\"avion\":"+avion+",\"aerolinea\":\""+aerolinea+"\",\"realizado\":"+realizado+",\"distancia\""+distancia+",\"duracion\":\""+duracion+"\",\"tipo\":"+tipo;
 	}
 	
 }

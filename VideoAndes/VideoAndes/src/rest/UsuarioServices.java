@@ -16,7 +16,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import vos.Cliente;
+import vos.Remitente;
 import vos.Vuelo;
+import vos.VueloCarga;
 import vos.VueloPasajeros;
 import master.VuelAndesMaster;
 
@@ -258,23 +260,34 @@ public class UsuarioServices
 	}
 	
 	@GET 
-	@Path("RFC9")
+	@Path("RFC10")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String RFC10( @QueryParam("fechaInicial") String fechaI,  @QueryParam("fechaFinal") String fechaF, @QueryParam("ciudad1") String ciudad1,@QueryParam("ciudad2") String ciudad2)
 	{
 		VuelAndesMaster fachada = VuelAndesMaster.darInstancia(getPath());
 		ArrayList<Vuelo> v = new ArrayList<>();
+		String resp = null;
 		try
 		{
 			v = fachada.viajesCiudad(fechaI,fechaF,ciudad1,ciudad2); 
-			String resp="[";
+			resp="[";
 			for (int i = 0; i < v.size(); i++) 
 			{
 				Vuelo este = v.get(i);
 				resp+= este.toString();
 				if(este.isTipo())
 				{
-					((VueloPasajeros)este).getClientes().size();
+					resp+= ",\"cantPasajeros\":"+((VueloPasajeros)este).getClientes().size();
+				}
+				else
+				{
+					ArrayList<Remitente> h = ((VueloCarga)este).getClientes();
+					float ton = 0;
+					for (int j = 0; j < h.size(); j++) 
+					{
+						ton+= h.get(i).getDensidadCarga();
+					}
+					resp+= ",\"cantCarga\":"+ton;
 				}
 				resp+="}";
 			}
